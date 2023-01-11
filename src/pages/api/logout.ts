@@ -1,7 +1,7 @@
 // /api/example.js
 
 import { serialize } from "cookie";
-import { generateOAuthState } from "../../lib/oauth/oauthUtils";
+import { generateOAuthState } from "../../lib/auth/authUtils";
 
 const handler = async function (req, res) {
   res.setHeader(

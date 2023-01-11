@@ -1,31 +1,13 @@
 import { useEffect, useState } from "react";
-import { generateOAuthState } from "../lib/oauth/oauthUtils";
+import { generateOAuthState } from "../lib/auth/authUtils";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
 export default function Home(props) {
-  const [token, setToken] = useState("");
-  const [sessionState, setSessionState] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(0);
   const [test, setTest] = useState("");
-  // generateOAuthState();
-
-  // if (typeof window !== "undefined") {
-  //   // Client-side-only code
-  //   const top = window.outerHeight;
-  //   console.log(top);
-  // }
 
   console.log(props);
-
-  // useEffect(() => {
-  //   const cookie = localStorage.getItem("sessionAccess");
-  //   if (cookie === null) return;
-  //   const val = JSON.parse(cookie);
-
-  //   if (val.sessionID.length === 40 && val.successfull === true)
-  //     setIsAuthorized(1);
-  // }, [isAuthorized]);
 
   useEffect(() => {
     const cookie = props.sessionId;
@@ -33,24 +15,6 @@ export default function Home(props) {
 
     if (cookie.length === 40) setIsAuthorized(1);
   }, [isAuthorized]);
-
-  const handleAuth = async () => {
-    // const token = await fetch("./api/token").then((res) => res.json());
-
-    // console.log(token.token);
-    // setToken(token.token);
-
-    // localStorage.setItem("token", token.token);
-
-    // const ses = generateOAuthState();
-    // console.log(ses);
-
-    // setSessionState(ses);
-    // localStorage.setItem("sessionID", ses);
-
-    // window.location.href = `https://www.themoviedb.org/authenticate/${token.token}?redirect_to=http://localhost:3000/auth?stateId=${ses}`;
-    window.location.href = "http://localhost:3000/api/test";
-  };
 
   const handleLogout = async () => {
     const query = {
@@ -92,11 +56,11 @@ export default function Home(props) {
   return (
     <div>
       <h1>test</h1>
-      <div>Token: {token}</div>
-      <div>Session ID: {sessionState}</div>
+
       <div>Is Authorised? {isAuthorized}</div>
       <div>Test: {test}</div>
-      <button onClick={handleAuth}>Login with IMDB</button>
+
+      <a href="http://localhost:3000/api/login">Login</a>
       <div></div>
       <button onClick={handleLogout}>Logout</button>
     </div>

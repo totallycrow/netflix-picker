@@ -1,7 +1,3 @@
-import { Ref } from "react";
-
-
-
 export const generateOAuthState = () => {
   let possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
