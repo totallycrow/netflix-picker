@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { generateOAuthState } from "../lib/auth/authUtils";
+import { GetServerSideProps } from "next";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
-export default function Home(props) {
+export default function Home(props: PageProps) {
   const [isAuthorized, setIsAuthorized] = useState(0);
   const [test, setTest] = useState("");
 
   console.log(props);
 
   useEffect(() => {
-    const cookie = props.sessionId;
-    if (cookie === null) return;
-
-    if (cookie.length === 40) setIsAuthorized(1);
+    if (props.isAuth) setIsAuthorized(1);
   }, [isAuthorized]);
 
   const handleLogout = async () => {
@@ -67,21 +64,43 @@ export default function Home(props) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const cookies = context.req.cookies;
+type PageProps = {
+  isAuth: boolean;
+  sessionId: string;
+};
 
-  console.log(cookies);
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
+  const sessionId = context.req.cookies.sessionId;
 
-  if (Object.keys(cookies).length === 0)
+  if (sessionId === undefined || sessionId.length === 0)
     return {
       props: {
+        isAuth: false,
         sessionId: "",
       },
     };
 
+  // validate if session still valid
+  const data = await fetch(
+    `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
+  ).then((res) => res.json());
+  console.log(data);
+
+  if (data.success === false) {
+    return {
+      props: {
+        isAuth: false,
+        sessionId: "",
+      },
+    };
+  }
+
   return {
     props: {
-      sessionId: cookies.sessionId,
+      isAuth: true,
+      sessionId: sessionId,
     },
   };
-}
+};

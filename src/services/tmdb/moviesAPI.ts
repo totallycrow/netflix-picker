@@ -20,6 +20,14 @@ interface IRequestRejected {
   status_code: number;
 }
 
+interface IUserId {
+  userId: string;
+}
+
+interface IFavouriteMoviesList {
+  favouriteMoviesList: Array<any>;
+}
+
 export default class moviesAPI {
   public static async getToken(): Promise<ITokenSuccess | Error> {
     try {
@@ -33,6 +41,44 @@ export default class moviesAPI {
       return err as Error;
     }
   }
+
+  public static async getUserId(sessionId: string): Promise<IUserId | Error> {
+    try {
+      const userId = await axios
+        .get(
+          `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
+        )
+        .then((response) => response.data.id);
+      return { userId: userId };
+    } catch (err) {
+      return err as Error;
+    }
+  }
+
+  public static async getFavouriteMovies(
+    userId: string,
+    sessionId: string
+  ): Promise<IFavouriteMoviesList | Error> {
+    try {
+      const movies = await axios
+        .get(
+          `https://api.themoviedb.org/3/account/${userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}&language=en-US&sort_by=created_at.asc&page=1`
+        )
+        .then((response) => response.data.results);
+      return { favouriteMoviesList: movies };
+    } catch (err) {
+      return err as Error;
+    }
+  }
+
+  // const data = await fetch(
+  //   `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
+  // ).then((res) => res.json());
+  // console.log(data);
+
+  // const movies = await fetch(
+  //   `https://api.themoviedb.org/3/account/${data.id}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}&language=en-US&sort_by=created_at.asc&page=1`
+  // ).then((movies) => movies.json());
 
   //   public static async get<T>(endpoint: string): Promise<T | Error> {
   //     const targetURL = host + endpoint;

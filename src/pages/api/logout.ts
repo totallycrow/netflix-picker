@@ -2,8 +2,9 @@
 
 import { serialize } from "cookie";
 import { generateOAuthState } from "../../lib/auth/authUtils";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async function (req, res) {
+const handler = async function (req: NextApiRequest, res: NextApiResponse) {
   res.setHeader(
     "Set-Cookie",
     serialize("sessionId", "", {
