@@ -11,7 +11,12 @@ export default function favourites(props: IMoviesListPage) {
     return (
       <div>
         <h1>My Favourites</h1>
-        <div>{props.movies[0].title}</div>
+        {/* <div>{props.movies[0].title}</div> */}
+        <div>
+          {props.movies.map((movie) => (
+            <div key={movie.id}>{movie.title}</div>
+          ))}
+        </div>
       </div>
     );
   }

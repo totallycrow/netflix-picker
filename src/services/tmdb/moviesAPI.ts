@@ -4,7 +4,7 @@ const host = "https://api.themoviedb.org/3/";
 
 export default class moviesAPI {
   // **************************************************
-  // *************** GETTERS **************************
+  // ****************** GETTERS ***********************
   // **************************************************
 
   public static async getToken(): Promise<ITokenSuccess | RequestError> {
@@ -91,7 +91,7 @@ export default class moviesAPI {
         };
     }
 
-    if (!URL)
+    if (URL === "")
       return {
         success: false,
         errorMessage: "Invalid parameter",
@@ -120,7 +120,8 @@ export default class moviesAPI {
   public static async loginControl(sessionId: string | undefined) {
     const timeStamp = new Date(Date.now()).toUTCString();
 
-    if (sessionId === "NOT_AUTHORIZED") {
+    // Check if cookie exists
+    if (sessionId === "NOT_AUTHORIZED" || sessionId === undefined) {
       return {
         isLoggedIn: false,
         isAuth: false,
@@ -131,6 +132,7 @@ export default class moviesAPI {
       };
     }
 
+    // If cookie exists, check if session is still valid
     const data = await fetch(
       `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
     ).then((res) => res.json());
@@ -148,7 +150,6 @@ export default class moviesAPI {
       };
     }
 
-    console.log(data);
     return {
       isLoggedIn: true,
       isAuth: true,
