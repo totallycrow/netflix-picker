@@ -30,42 +30,60 @@ interface IFavouriteMoviesList {
 
 export default class moviesAPI {
   public static async getToken(): Promise<ITokenSuccess | Error> {
-    try {
-      const token = await axios
-        .get(
-          "https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7"
-        )
-        .then((response) => response.data);
-      return token;
-    } catch (err) {
-      return err as Error;
-    }
+    const data = await this.fetcher<ITokenSuccess>("getToken");
+    console.log(data);
+    return data;
   }
 
-  public static async getUserId(sessionId: string): Promise<IUserId | Error> {
-    try {
-      const userId = await axios
-        .get(
-          `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
-        )
-        .then((response) => response.data.id);
-      return { userId: userId };
-    } catch (err) {
-      return err as Error;
-    }
+  public static async getUserId(userId: string): Promise<IUserId | Error> {
+    const data = await this.fetcher<IUserId>("getUserId", userId);
+    console.log(data);
+    return data;
   }
 
   public static async getFavouriteMovies(
     userId: string,
     sessionId: string
   ): Promise<IFavouriteMoviesList | Error> {
+    const data = await this.fetcher<IFavouriteMoviesList>(
+      "getFavouriteMovies",
+      sessionId,
+      userId
+    );
+    console.log(data);
+    return data;
+  }
+
+  private static async fetcher<T>(
+    endpointType: string,
+    sessionId?: string,
+    userId?: string
+  ): Promise<T | Error> {
+    let URL = "";
+    console.log(endpointType);
+
+    if (endpointType === "getToken") {
+      URL =
+        "https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7";
+    }
+    if (endpointType === "getUserId") {
+      URL = `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`;
+      if (!sessionId) return new Error("Invalid sessionId parameter");
+    }
+    if (endpointType === "getFavouriteMovies") {
+      URL = `https://api.themoviedb.org/3/account/${userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}&language=en-US&sort_by=created_at.asc&page=1`;
+      if (!sessionId || !userId) return new Error("Invalid parameter");
+    }
+
+    console.log(URL);
+
+    if (!URL) return new Error("Invalid request");
+    console.log(URL);
+
     try {
-      const movies = await axios
-        .get(
-          `https://api.themoviedb.org/3/account/${userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}&language=en-US&sort_by=created_at.asc&page=1`
-        )
-        .then((response) => response.data.results);
-      return { favouriteMoviesList: movies };
+      const data = await axios.get(URL).then((response) => response.data);
+      console.log(data);
+      return data;
     } catch (err) {
       return err as Error;
     }
@@ -115,7 +133,4 @@ export default class moviesAPI {
   //       return err;
   //     }
   //   }
-
-  //   public static fetcher = (url: string) =>
-  //     axios.get(url).then((res) => res.data);
 }

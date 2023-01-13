@@ -12,7 +12,7 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse) {
 
   const token = await moviesAPI.getToken();
   console.log(token);
-  
+
   if (token instanceof Error) {
     console.log("ERROR");
     return res.redirect(307, `http://localhost:3000/`);
