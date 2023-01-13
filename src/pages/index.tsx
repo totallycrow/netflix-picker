@@ -1,106 +1,63 @@
 import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
+import moviesAPI from "../services/tmdb/moviesAPI";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
-export default function Home(props: PageProps) {
+export default function Home(props: any) {
   const [isAuthorized, setIsAuthorized] = useState(0);
-  const [test, setTest] = useState("");
-
-  console.log(props);
+  const [testUserData, setTestUserData] = useState("");
 
   useEffect(() => {
-    if (props.isAuth) setIsAuthorized(1);
-  }, [isAuthorized]);
+    if (props.loginData.isAuth) setIsAuthorized(1);
+  }, [isAuthorized, props.loginData.isAuth]);
 
-  const handleLogout = async () => {
-    const query = {
-      request_token: "",
-    };
-    // localStorage.removeItem("sessionAccess");
-    // setIsAuthorized(0);
-    await fetch("http://localhost:3000/api/logout", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(query),
-    });
-    window.location.href = "http://localhost:3000/";
-  };
-
-  // https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=xxx
   useEffect(() => {
     if (!isAuthorized) {
-      setTest("");
+      setTestUserData("");
       return;
     }
-
-    const getUserData = async () => {
-      const x = localStorage.getItem("sessionAccess");
-      console.log(x);
-      const stateId = props.sessionId;
-
-      const data = await fetch(
-        `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${stateId}`
-      ).then((res) => res.json());
-      console.log(data);
-      setTest(data.username);
-    };
-    getUserData();
-  }, [isAuthorized]);
+    setTestUserData(props.loginData.userId);
+  }, [isAuthorized, props.loginData.userId]);
 
   return (
     <div>
       <h1>test</h1>
 
       <div>Is Authorised? {isAuthorized}</div>
-      <div>Test: {test}</div>
+      <div>Test: {testUserData}</div>
 
       <a href="http://localhost:3000/api/login">Login</a>
       <div></div>
-      <button onClick={handleLogout}>Logout</button>
+      <a href="http://localhost:3000/api/logout">Logout</a>
     </div>
   );
 }
 
-type PageProps = {
-  isAuth: boolean;
-  sessionId: string;
-};
-
-export const getServerSideProps: GetServerSideProps<PageProps> = async (
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   context
 ) => {
-  const sessionId = context.req.cookies.sessionId;
+  const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
+  const loginData = await moviesAPI.loginControl(sessionId);
 
-  if (sessionId === undefined || sessionId.length === 0)
+  if (!loginData.isLoggedIn || !loginData.isAuth || loginData === undefined) {
     return {
       props: {
-        isAuth: false,
-        sessionId: "",
-      },
-    };
-
-  // validate if session still valid
-  const data = await fetch(
-    `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
-  ).then((res) => res.json());
-  console.log(data);
-
-  if (data.success === false) {
-    return {
-      props: {
-        isAuth: false,
-        sessionId: "",
+        loginData: loginData,
+        sessionId: "NOT_AUTHORIZED",
       },
     };
   }
 
   return {
     props: {
-      isAuth: true,
-      sessionId: sessionId,
+      loginData: loginData,
+      sessionId: "NOT_AUTHORIZED",
     },
   };
+};
+
+type HomePageProps = {
+  loginData: any;
+  sessionId: string;
 };
