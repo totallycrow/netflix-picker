@@ -8,7 +8,9 @@ export default class moviesAPI {
   // **************************************************
 
   public static async getToken(): Promise<ITokenSuccess | RequestError> {
-    const data = await this.fetcher<ITokenSuccess>("getToken");
+    const data = await this.fetcher<ITokenSuccess>({
+      endpointType: "getToken",
+    });
 
     if (!data.success) {
       return data;
@@ -25,7 +27,10 @@ export default class moviesAPI {
   public static async getUserId(
     userId: string
   ): Promise<IUserId | RequestError> {
-    const data = await this.fetcher<IUserIdSuccess>("getUserId", userId);
+    const data = await this.fetcher<IUserIdSuccess>({
+      endpointType: "getUserId",
+      userId,
+    });
     console.log(data);
 
     if (!data.success) {
@@ -37,16 +42,42 @@ export default class moviesAPI {
     };
   }
 
+  public static async getMovie(movieId: string): Promise<any | RequestError> {
+    const data = await this.fetcher<any>({ endpointType: "getMovie" });
+    console.log(data);
+
+    if (!data.success) {
+      return data;
+    }
+
+    return {
+      movieData: data.payload,
+    };
+  }
+
+  public static async getPopularMovies(): Promise<any | RequestError> {
+    const data = await this.fetcher<any>({ endpointType: "getPopularMovies" });
+    console.log(data);
+
+    if (!data.success) {
+      return data;
+    }
+
+    return {
+      popularMovies: data.payload.results,
+    };
+  }
+
   // **************************************************
   public static async getFavouriteMovies(
     userId: string,
     sessionId: string
   ): Promise<IFavouriteMoviesList | RequestError> {
-    const data = await this.fetcher<IMoviesSuccess>(
-      "getFavouriteMovies",
+    const data = await this.fetcher<IMoviesSuccess>({
+      endpointType: "getFavouriteMovies",
       sessionId,
-      userId
-    );
+      userId,
+    });
     console.log(data);
 
     if (!data.success) {
@@ -63,28 +94,36 @@ export default class moviesAPI {
   // **************************************************
 
   private static async fetcher<T>(
-    endpointType: string,
-    sessionId?: string,
-    userId?: string
+    config: fetcherConfig
   ): Promise<RequestSuccess<T> | RequestError> {
     let URL = "";
-    console.log(endpointType);
+    console.log(config.endpointType);
 
-    if (endpointType === "getToken") {
+    if (config.endpointType === "getMovie") {
+      URL =
+        "https://api.themoviedb.org/3/movie/popular?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US&page=1";
+    }
+
+    if (config.endpointType === "getPopularMovies") {
+      URL =
+        "https://api.themoviedb.org/3/movie/popular?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US&page=1";
+    }
+
+    if (config.endpointType === "getToken") {
       URL =
         "https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7";
     }
-    if (endpointType === "getUserId") {
-      URL = `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`;
-      if (!sessionId)
+    if (config.endpointType === "getUserId") {
+      URL = `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${config.sessionId}`;
+      if (!config.sessionId)
         return {
           success: false,
           errorMessage: "Invalid parameter",
         };
     }
-    if (endpointType === "getFavouriteMovies") {
-      URL = `https://api.themoviedb.org/3/account/${userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}&language=en-US&sort_by=created_at.asc&page=1`;
-      if (!sessionId || !userId)
+    if (config.endpointType === "getFavouriteMovies") {
+      URL = `https://api.themoviedb.org/3/account/${config.userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${config.sessionId}&language=en-US&sort_by=created_at.asc&page=1`;
+      if (!config.sessionId || !config.userId)
         return {
           success: false,
           errorMessage: "Invalid parameter",
@@ -224,4 +263,11 @@ interface IMoviesSuccess {
   ];
   total_pages: string;
   total_results: string;
+}
+
+interface fetcherConfig {
+  endpointType: string;
+  sessionId?: string;
+  userId?: string;
+  movieId?: string;
 }

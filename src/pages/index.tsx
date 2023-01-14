@@ -4,7 +4,7 @@ import moviesAPI from "../services/tmdb/moviesAPI";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
-export default function Home(props: any) {
+export default function Home(props: HomePageProps) {
   const [isAuthorized, setIsAuthorized] = useState(0);
   const [testUserData, setTestUserData] = useState("");
 
@@ -41,6 +41,10 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 ) => {
   const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
   const loginData = await moviesAPI.loginControl(sessionId);
+
+  const test = await moviesAPI.getPopularMovies();
+  console.log("///////// POPULAR MOVIES");
+  console.log(test);
 
   if (!loginData.isLoggedIn || !loginData.isAuth || loginData === undefined) {
     return {
