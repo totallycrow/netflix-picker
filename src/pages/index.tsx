@@ -30,6 +30,8 @@ export default function Home(props: any) {
       <a href="http://localhost:3000/api/login">Login</a>
       <div></div>
       <a href="http://localhost:3000/api/logout">Logout</a>
+      <div></div>
+      <a href="http://localhost:3000/favourites">Favourites List</a>
     </div>
   );
 }

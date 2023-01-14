@@ -2,24 +2,22 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import moviesAPI from "./services/tmdb/moviesAPI";
 
 export async function middleware(request: NextRequest) {
+  console.log("?? Hello from Middleware ??");
   //   if (request.nextUrl.pathname.startsWith("/about")) {
   //     return NextResponse.rewrite(new URL("/about-2", request.url));
   //   }
   //   if (request.nextUrl.pathname.startsWith("/dashboard")) {
   //     return NextResponse.rewrite(new URL("/dashboard/user", request.url));
   //   }
-  const cookie = request.cookies.get("sessionId")?.value;
-  console.log("COOKIE");
-  console.log(cookie);
 
-  if (!cookie) return;
-  const isAuthorized = cookie.length === 40;
-  console.log(isAuthorized);
-
-  if (request.nextUrl.pathname.startsWith("/dashboard") && isAuthorized) {
-    return NextResponse.redirect(new URL("/about-2", request.url));
+  if (request.nextUrl.pathname.startsWith("/favourites")) {
+    const cookie = request.cookies.get("sessionId")?.value;
+    const loginData = await moviesAPI.loginControl(cookie);
+    if (!loginData.isAuth)
+      return NextResponse.redirect(new URL("/", request.url));
   }
 }
 
