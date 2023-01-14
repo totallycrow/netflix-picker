@@ -43,7 +43,7 @@ export default class moviesAPI {
   }
 
   public static async getMovie(movieId: string): Promise<any | RequestError> {
-    const data = await this.fetcher<any>({ endpointType: "getMovie" });
+    const data = await this.fetcher<any>({ endpointType: "getMovie", movieId });
     console.log(data);
 
     if (!data.success) {
@@ -100,8 +100,7 @@ export default class moviesAPI {
     console.log(config.endpointType);
 
     if (config.endpointType === "getMovie") {
-      URL =
-        "https://api.themoviedb.org/3/movie/popular?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US&page=1";
+      URL = `https://api.themoviedb.org/3/movie/${config.movieId}?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US`;
     }
 
     if (config.endpointType === "getPopularMovies") {
