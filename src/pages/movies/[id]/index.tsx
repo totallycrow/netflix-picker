@@ -9,7 +9,7 @@ export default function MoviePage(props: any) {
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   context
 ) => {
-  const movieId = context.params.id;
+  const movieId = context.params!.id;
   console.log("PARAMS:", movieId);
   const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
   const loginData = await moviesAPI.loginControl(sessionId);

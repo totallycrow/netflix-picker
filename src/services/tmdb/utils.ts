@@ -1,4 +1,4 @@
-export const generateQuery = (token: string) => {
+export const generateSessionQuery = (token: string) => {
   const queryBody = {
     request_token: token,
   };

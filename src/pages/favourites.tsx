@@ -3,9 +3,9 @@ import React from "react";
 import moviesAPI from "../services/tmdb/moviesAPI";
 import { RequestError } from "../services/tmdb/moviesAPI";
 
-export default function favourites(props: IMoviesListPage) {
+export default function favourites(props: FavouritesPageProps) {
   console.log(props);
-  if (props.sessionId === "NOT_AUTHORIZED") {
+  if (props.sharedData.loginData.sessionId === "NOT_AUTHORIZED") {
     return <div>Log in to view this page</div>;
   } else {
     return (
@@ -13,7 +13,7 @@ export default function favourites(props: IMoviesListPage) {
         <h1>My Favourites</h1>
         {/* <div>{props.movies[0].title}</div> */}
         <div>
-          {props.movies.map((movie) => (
+          {props.sectionBody.favouriteMovies.map((movie: IMovie) => (
             <div key={movie.id}>{movie.title}</div>
           ))}
         </div>
@@ -27,43 +27,81 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const loginData = await moviesAPI.loginControl(sessionId);
 
+  // CHECK LOGIN/AUTH
   if (!loginData.isLoggedIn || !loginData.isAuth) {
     return {
       props: {
-        loginData: loginData,
-        sessionId: "NOT_AUTHORIZED",
-        movies: [],
+        sharedData: {
+          loginData: loginData,
+        },
+        sectionBody: {
+          favouriteMovies: [],
+        },
       },
     };
   }
-
+  // GET MOVIES
   const movies = await moviesAPI.getFavouriteMovies(
     loginData.userId,
     sessionId
   );
-
   console.log(movies);
 
   if (movies instanceof Error || "errorMessage" in movies)
     return {
       props: {
-        loginData: loginData,
-        sessionId: "NOT_AUTHORIZED",
-        movies: [],
+        sharedData: {
+          loginData: loginData,
+        },
+        sectionBody: {
+          favouriteMovies: [],
+        },
       },
     };
 
   return {
     props: {
-      loginData: loginData,
-      sessionId: sessionId,
-      movies: movies.favouriteMoviesList,
+      sharedData: {
+        loginData: loginData,
+      },
+      sectionBody: {
+        favouriteMovies: movies.favouriteMoviesList,
+      },
     },
   };
 };
 
-interface IMoviesListPage {
-  loginData: any;
+type FavouritesPageProps = {
+  sharedData: {
+    loginData: ILoginData;
+  };
+  sectionBody: {
+    favouriteMovies: IMovie[];
+  };
+};
+
+interface ILoginData {
+  isLoggedIn: boolean;
+  isAuth: boolean;
   sessionId: string;
-  movies: Array<any>;
+  userId: any;
+  message: string;
+  lastValidated: string;
+}
+
+interface IMovie {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: string[];
+  id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: string;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: string;
+  vote_count: string;
 }

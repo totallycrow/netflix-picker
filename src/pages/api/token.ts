@@ -7,10 +7,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const handler = moviesAPI.getToken();
-  const token = await fetch(
-    "https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7"
-  ).then((response) => response.json());
+  const token = await moviesAPI.getToken();
+
   console.log(token);
-  res.status(200).json({ name: "John Doe", token: token.request_token });
+
+  if (token.success) {
+    res.status(200).json({ token: token.request_token });
+  }
+
+  if ("errorMessage" in token) {
+    return res.status(500).json({
+      success: false,
+      errorMessage: token.errorMessage,
+    });
+  }
 }

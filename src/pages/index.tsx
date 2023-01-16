@@ -9,16 +9,16 @@ export default function Home(props: HomePageProps) {
   const [testUserData, setTestUserData] = useState("");
 
   useEffect(() => {
-    if (props.loginData.isAuth) setIsAuthorized(1);
-  }, [isAuthorized, props.loginData.isAuth]);
+    if (props.sharedData.loginData.isAuth) setIsAuthorized(1);
+  }, [isAuthorized, props.sharedData.loginData.isAuth]);
 
   useEffect(() => {
     if (!isAuthorized) {
       setTestUserData("");
       return;
     }
-    setTestUserData(props.loginData.userId);
-  }, [isAuthorized, props.loginData.userId]);
+    setTestUserData(props.sharedData.loginData.userId);
+  }, [isAuthorized, props.sharedData.loginData.userId]);
 
   return (
     <div>
@@ -46,24 +46,32 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   console.log("///////// POPULAR MOVIES");
   console.log(test);
 
-  if (!loginData.isLoggedIn || !loginData.isAuth || loginData === undefined) {
-    return {
-      props: {
-        loginData: loginData,
-        sessionId: "NOT_AUTHORIZED",
-      },
-    };
-  }
-
   return {
     props: {
-      loginData: loginData,
-      sessionId: "NOT_AUTHORIZED",
+      sharedData: {
+        loginData: loginData,
+      },
+      sectionBody: {
+        feaaturedMovies: {},
+      },
     },
   };
 };
 
 type HomePageProps = {
-  loginData: any;
-  sessionId: string;
+  sharedData: {
+    loginData: ILoginData;
+  };
+  sectionBody: {
+    feaaturedMovies: {};
+  };
 };
+
+interface ILoginData {
+  isLoggedIn: boolean;
+  isAuth: boolean;
+  sessionId: string;
+  userId: any;
+  message: string;
+  lastValidated: string;
+}

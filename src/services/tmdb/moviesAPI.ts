@@ -42,8 +42,13 @@ export default class moviesAPI {
     };
   }
 
-  public static async getMovie(movieId: string): Promise<any | RequestError> {
-    const data = await this.fetcher<any>({ endpointType: "getMovie", movieId });
+  public static async getMovie(
+    movieId: string
+  ): Promise<RequestSuccess<IMovie> | RequestError> {
+    const data = await this.fetcher<IMovie>({
+      endpointType: "getMovie",
+      movieId,
+    });
     console.log(data);
 
     if (!data.success) {
@@ -51,7 +56,8 @@ export default class moviesAPI {
     }
 
     return {
-      movieData: data.payload,
+      success: true,
+      payload: data.payload,
     };
   }
 
@@ -242,24 +248,7 @@ export type RequestSuccess<T> = {
 
 interface IMoviesSuccess {
   page: string;
-  results: [
-    {
-      adult: boolean;
-      backdrop_path: string;
-      genre_ids: Array<string>;
-      id: string;
-      original_language: string;
-      original_title: string;
-      overview: string;
-      popularity: string;
-      poster_path: string;
-      release_date: string;
-      title: string;
-      video: boolean;
-      vote_average: string;
-      vote_count: string;
-    }
-  ];
+  results: IMovie[];
   total_pages: string;
   total_results: string;
 }
@@ -269,4 +258,21 @@ interface fetcherConfig {
   sessionId?: string;
   userId?: string;
   movieId?: string;
+}
+
+interface IMovie {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: string[];
+  id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: string;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: string;
+  vote_count: string;
 }
