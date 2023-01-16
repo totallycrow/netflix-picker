@@ -18,7 +18,6 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse) {
   }
 
   const query = generateSessionQuery(token);
-
   const session = await fetch(NEW_SESSION_URL, query).then((res) => res.json());
 
   // set cookie

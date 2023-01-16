@@ -39,8 +39,9 @@ export default function Home(props: HomePageProps) {
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   context
 ) => {
-  const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
-  const loginData = await moviesAPI.loginControl(sessionId);
+  const loginData = await moviesAPI.loginControl(context.req.cookies.sessionId);
+
+  // typeof value === "number" && !isNaN(value)
 
   const test = await moviesAPI.getPopularMovies();
   console.log("///////// POPULAR MOVIES");

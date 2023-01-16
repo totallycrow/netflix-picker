@@ -12,6 +12,13 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse) {
       expires: new Date(0),
     })
   );
+
+  // window.open("http://")
+
+  // const a = document.createElement("a")
+  // a.href = "url"
+  // a.click()
+
   //   return res.status(200).json({
   //     success: "Successfully logged out",
   //   });

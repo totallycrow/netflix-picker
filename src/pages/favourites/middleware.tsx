@@ -13,12 +13,10 @@ export async function middleware(request: NextRequest) {
   //     return NextResponse.rewrite(new URL("/dashboard/user", request.url));
   //   }
 
-  if (request.nextUrl.pathname.includes("/protected")) {
-    const cookie = request.cookies.get("sessionId")?.value;
-    const loginData = await moviesAPI.loginControl(cookie);
-    if (!loginData.isAuth)
-      return NextResponse.redirect(new URL("/", request.url));
-  }
+  const cookie = request.cookies.get("sessionId")?.value;
+  const loginData = await moviesAPI.loginControl(cookie);
+  if (!loginData.isAuth)
+    return NextResponse.redirect(new URL("/", request.url));
 }
 
 // export function middleware(request: NextRequest) {

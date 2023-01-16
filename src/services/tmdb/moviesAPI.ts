@@ -2,6 +2,8 @@ import axios from "axios";
 
 const host = "https://api.themoviedb.org/3/";
 
+// generateMovieURl = (movieId) => https://api.themoviedb.org/3/movie/${config.movieId}?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US
+
 export default class moviesAPI {
   // **************************************************
   // ****************** GETTERS ***********************
@@ -170,7 +172,7 @@ export default class moviesAPI {
     const timeStamp = new Date(Date.now()).toUTCString();
 
     // Check if cookie exists
-    if (sessionId === "NOT_AUTHORIZED" || sessionId === undefined) {
+    if (sessionId === "NOT_AUTHORIZED" || !sessionId) {
       return {
         isLoggedIn: false,
         isAuth: false,

@@ -4,26 +4,29 @@ import moviesAPI from "../services/tmdb/moviesAPI";
 
 export default function favourites(props: FavouritesPageProps) {
   console.log(props);
-  if (props.sharedData.loginData.sessionId === "NOT_AUTHORIZED") {
-    return <div>Log in to view this page</div>;
-  } else {
-    return (
-      <div>
-        <h1>My Favourites</h1>
+  // if (props.sharedData.loginData.sessionId === "NOT_AUTHORIZED") {
+  //   return <div>Log in to view this page</div>;
+  // }
 
-        <div>
-          {props.sectionBody.favouriteMovies.map((movie: IMovie) => (
-            <div key={movie.id}>{movie.title}</div>
-          ))}
-        </div>
+  return (
+    <div>
+      <h1>My Favourites</h1>
+
+      <div>
+        {props.sectionBody.favouriteMovies.map((movie: IMovie) => (
+          <div key={movie.id}>{movie.title}</div>
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+// /adasd/#/asdasdad
+
+// pipe
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
-
   const loginData = await moviesAPI.loginControl(sessionId);
 
   // CHECK LOGIN/AUTH
