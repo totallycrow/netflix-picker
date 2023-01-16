@@ -42,6 +42,7 @@ export default class moviesAPI {
     };
   }
 
+  // **************************************************
   public static async getMovie(
     movieId: string
   ): Promise<RequestSuccess<IMovie> | RequestError> {
@@ -61,7 +62,10 @@ export default class moviesAPI {
     };
   }
 
-  public static async getPopularMovies(): Promise<any | RequestError> {
+  // **************************************************
+  public static async getPopularMovies(): Promise<
+    RequestSuccess<IMovie[]> | RequestError
+  > {
     const data = await this.fetcher<any>({ endpointType: "getPopularMovies" });
     console.log(data);
 
@@ -70,7 +74,8 @@ export default class moviesAPI {
     }
 
     return {
-      popularMovies: data.payload.results,
+      success: true,
+      payload: data.payload.results,
     };
   }
 

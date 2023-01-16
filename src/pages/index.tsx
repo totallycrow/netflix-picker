@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 
   const test = await moviesAPI.getPopularMovies();
   console.log("///////// POPULAR MOVIES");
-  console.log(test);
+  // console.log(test);
 
   return {
     props: {
@@ -58,6 +58,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   };
 };
 
+// ************** TYPES & INTERFACES **************
 type HomePageProps = {
   sharedData: {
     loginData: ILoginData;

@@ -1,7 +1,6 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 import moviesAPI from "../services/tmdb/moviesAPI";
-import { RequestError } from "../services/tmdb/moviesAPI";
 
 export default function favourites(props: FavouritesPageProps) {
   console.log(props);
@@ -11,7 +10,7 @@ export default function favourites(props: FavouritesPageProps) {
     return (
       <div>
         <h1>My Favourites</h1>
-        {/* <div>{props.movies[0].title}</div> */}
+
         <div>
           {props.sectionBody.favouriteMovies.map((movie: IMovie) => (
             <div key={movie.id}>{movie.title}</div>
@@ -71,6 +70,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
+// ********************************************************
 type FavouritesPageProps = {
   sharedData: {
     loginData: ILoginData;
