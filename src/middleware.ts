@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   //     return NextResponse.rewrite(new URL("/dashboard/user", request.url));
   //   }
 
-  if (request.nextUrl.pathname.includes("/protected")) {
+  if (request.nextUrl.pathname.startsWith("/favourites")) {
     const cookie = request.cookies.get("sessionId")?.value;
     const loginData = await moviesAPI.loginControl(cookie);
     if (!loginData.isAuth)

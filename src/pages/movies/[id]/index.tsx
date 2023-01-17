@@ -1,9 +1,17 @@
 import { GetServerSideProps } from "next";
 import moviesAPI from "../../../services/tmdb/moviesAPI";
+import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 
 export default function MoviePage(props: any) {
-  console.log(props.movieData.title);
-  return <div>{props.movieData.title}</div>;
+  console.log(props);
+
+  return (
+    <div>
+      <div></div>
+      {props.payload.title}
+      <div></div>
+    </div>
+  );
 }
 
 // chakra-ui
@@ -25,18 +33,18 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 
   // const router = useRouter();
 
-  if (!loginData.isLoggedIn || !loginData.isAuth || loginData === undefined) {
-    return {
-      props: {
-        loginData: loginData,
-        sessionId: "NOT_AUTHORIZED",
-      },
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  // if (!loginData.isLoggedIn || !loginData.isAuth || loginData === undefined) {
+  //   return {
+  //     props: {
+  //       loginData: loginData,
+  //       sessionId: "NOT_AUTHORIZED",
+  //     },
+  //     // redirect: {
+  //     //   destination: "/",
+  //     //   permanent: false,
+  //     // },
+  //   };
+  // }
 
   return {
     props: {

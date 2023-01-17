@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import moviesAPI from "../services/tmdb/moviesAPI";
+import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
@@ -32,6 +34,7 @@ export default function Home(props: HomePageProps) {
       <a href="http://localhost:3000/api/logout">Logout</a>
       <div></div>
       <a href="http://localhost:3000/favourites">Favourites List</a>
+      <Button colorScheme="blue">Button</Button>
     </div>
   );
 }

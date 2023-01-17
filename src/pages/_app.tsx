@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const queryClient = new QueryClient();
 
@@ -26,11 +27,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        {/* <ErrorModalProvider value={{openModal, isModalOpened}}> */}
-        <Component {...pageProps} />
-        {/* </ErrorModalProvider> */}
-      </Hydrate>
+      <ChakraProvider>
+        <Hydrate state={pageProps.dehydratedState}>
+          {/* <ErrorModalProvider value={{openModal, isModalOpened}}> */}
+          <Component {...pageProps} />
+          {/* </ErrorModalProvider> */}
+        </Hydrate>
+      </ChakraProvider>
     </QueryClientProvider>
   );
 }
