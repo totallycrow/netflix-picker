@@ -5,11 +5,13 @@ import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 export default function MoviePage(props: any) {
   console.log(props);
 
+
   return (
     <div>
       <div></div>
       {props.payload.title}
       <div></div>
+      
     </div>
   );
 }
