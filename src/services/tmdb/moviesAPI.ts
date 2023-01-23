@@ -1,4 +1,5 @@
 import axios from "axios";
+import { generateFavouritesQuery } from "./utils";
 
 const host = "https://api.themoviedb.org/3/";
 
@@ -100,6 +101,22 @@ export default class moviesAPI {
     return {
       favouriteMoviesList: data.payload.results,
     };
+  }
+
+  public static async setFavourite(
+    accountId: string,
+    sessionId: string,
+    movieId: string,
+    isFavourite: boolean
+  ) {
+    const URL = `https://api.themoviedb.org/3/account/${accountId}/favorite?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`;
+    const query = generateFavouritesQuery(movieId, isFavourite);
+    try {
+      const result = await fetch(URL, query);
+      return result;
+    } catch (e) {
+      return e;
+    }
   }
 
   // **************************************************

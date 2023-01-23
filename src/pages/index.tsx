@@ -10,6 +10,8 @@ import { Container } from "@chakra-ui/react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import Link from "next/link";
+import { Header } from "../components/header/Header";
+import { MainMenu } from "../components/MainMenu";
 
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
@@ -17,7 +19,7 @@ export default function Home(props: HomePageProps) {
   const [isAuthorized, setIsAuthorized] = useState(0);
   const [testUserData, setTestUserData] = useState("");
   console.log(props);
-  console.log(props.sectionBody.featuredMovies.payload[0].backdrop_path);
+  console.log(props.sectionBody.featuredMovies[0].backdrop_path);
 
   useEffect(() => {
     if (props.sharedData.loginData.isAuth) setIsAuthorized(1);
@@ -33,7 +35,9 @@ export default function Home(props: HomePageProps) {
 
   return (
     <div>
-      <h1>test</h1>
+      <Header isAuth={props.sharedData.loginData.isAuth} />
+      <MainMenu></MainMenu>
+      {/* <h1>test</h1>
 
       <div>Is Authorised? {isAuthorized}</div>
       <div>Test: {testUserData}</div>
@@ -43,42 +47,38 @@ export default function Home(props: HomePageProps) {
       <a href="http://localhost:3000/api/logout">Logout</a>
       <div></div>
       <a href="http://localhost:3000/favourites">Favourites List</a>
-      <div></div>
+      <div></div> */}
 
       {/* <CardItem></CardItem> */}
-      <Container maxW="container.xl" bg="blue.600">
+      <Container maxW="container.xl">
         <Grid
           templateRows="repeat(2, 1fr)"
           templateColumns="repeat(3, 1fr)"
           gap={6}
         >
-          <GridItem w="100%" bg="blue.500">
-            <Center>
-              <Box padding="4" bg="blue.400" color="black" maxW="md">
-                <Link
-                  href={
-                    "http://localhost:3000/movies/" +
-                    props.sectionBody.featuredMovies.payload[0].id
-                  }
-                >
-                  <Image
-                    src={
-                      "https://image.tmdb.org/t/p/w500/" +
-                      props.sectionBody.featuredMovies.payload[0].poster_path
-                    }
-                    alt="Dan Abramov"
-                    boxSize="200px"
-                    objectFit="cover"
-                  />
-                </Link>
-              </Box>
-            </Center>
-          </GridItem>
-          <GridItem w="100%" bg="blue.500" />
-          <GridItem w="100%" bg="blue.500" />
-          <GridItem w="100%" bg="blue.500" />
-          <GridItem w="100%" bg="blue.500" />
-          <GridItem w="100%" bg="blue.500" />
+          {props.sectionBody.featuredMovies.map((movie) => {
+            return (
+              <div key={movie.id}>
+                <GridItem w="100%">
+                  <Center>
+                    <Box padding="4" color="black" maxW="md">
+                      <Link href={"http://localhost:3000/movies/" + movie.id}>
+                        <Image
+                          src={
+                            "https://image.tmdb.org/t/p/w500/" +
+                            movie.poster_path
+                          }
+                          alt="Dan Abramov"
+                          boxSize="200px"
+                          objectFit="cover"
+                        />
+                      </Link>
+                    </Box>
+                  </Center>
+                </GridItem>
+              </div>
+            );
+          })}
         </Grid>
 
         {/* <CardItem></CardItem> */}
@@ -96,7 +96,13 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 
   const test = await moviesAPI.getPopularMovies();
   console.log("///////// POPULAR MOVIES");
-  // console.log(test);
+  console.log(test);
+
+  let selectedMovies = [];
+  for (let i = 0; i < 6; i++) {
+    selectedMovies.push(test.payload[i]);
+  }
+  console.log(selectedMovies);
 
   return {
     props: {
@@ -104,7 +110,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
         loginData: loginData,
       },
       sectionBody: {
-        featuredMovies: test,
+        featuredMovies: selectedMovies,
       },
     },
   };
