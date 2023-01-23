@@ -21,18 +21,23 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       console.log(
         "________---------__________--------**************************************"
       );
+      console.log(url);
       console.log(`Path changing to ${url}`);
-      alert("Test");
+
+      if (url.includes("#")) {
+        alert("Test");
+      }
+
       // openModal
     };
     // router.events.on("hashChangeStart", onHashChangeStart);
     // return () => {
     //     router.events.off("hashChangeStart", onHashChangeStart);
     // };
-    router.events.on("hashChangeStart", onHashChangeStart);
+    router.events.on("hashChangeComplete", onHashChangeStart);
 
     return () => {
-      router.events.off("hashChangeStart", onHashChangeStart);
+      router.events.off("hashChangeComplete", onHashChangeStart);
     };
   }, [router.events]);
 
