@@ -10,7 +10,7 @@ export default function MoviePage(props: any) {
   console.log(props);
   const [fav, setFav] = useState(props.isFavourite);
 
-  const { userId, sessionId } = props.loginData;
+  const { userId, sessionId, isAuth } = props.loginData;
 
   console.log(fav);
 
@@ -33,13 +33,15 @@ export default function MoviePage(props: any) {
           <div>
             <button
               onClick={() => {
-                moviesAPI.setFavourite(
-                  userId,
-                  sessionId,
-                  props.payload.id,
-                  false
-                );
-                setFav(false);
+                if (isAuth) {
+                  moviesAPI.setFavourite(
+                    userId,
+                    sessionId,
+                    props.payload.id,
+                    false
+                  );
+                  setFav(false);
+                }
               }}
             >
               Remove From Favourites
@@ -49,13 +51,17 @@ export default function MoviePage(props: any) {
           <div>
             <button
               onClick={() => {
-                moviesAPI.setFavourite(
-                  userId,
-                  sessionId,
-                  props.payload.id,
-                  true
-                );
-                setFav(true);
+                if (isAuth) {
+                  moviesAPI.setFavourite(
+                    userId,
+                    sessionId,
+                    props.payload.id,
+                    false
+                  );
+                  setFav(true);
+                } else {
+                  alert("Log in to add to favourites!");
+                }
               }}
             >
               Add To Favourites
@@ -102,6 +108,18 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
     sessionId
   );
 
+  if (!loginData.isAuth) {
+    return {
+      props: {
+        loginData: loginData,
+        sessionId: "NOT_AUTHORIZED",
+        isFavourite: false,
+
+        ...movieData,
+      },
+    };
+  }
+
   const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
 
   const isFav = favMoviesIds.some((id) => {
@@ -117,7 +135,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
       loginData: loginData,
       sessionId: "NOT_AUTHORIZED",
       isFavourite: isFav,
-      favouriteMovies: favMoviesIds,
+
       ...movieData,
     },
   };
