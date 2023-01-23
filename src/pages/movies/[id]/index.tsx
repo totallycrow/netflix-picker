@@ -56,7 +56,7 @@ export default function MoviePage(props: any) {
                     userId,
                     sessionId,
                     props.payload.id,
-                    false
+                    true
                   );
                   setFav(true);
                 } else {
