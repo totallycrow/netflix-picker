@@ -5,25 +5,36 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const queryClient = new QueryClient();
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
   // const {openModal, isModalOpened} = useModal()
 
-  // useEffect(() => {
-  //     const onHashChangeStart = (url) =>
-  //         ?error_code=13
-  //         console.log(`Path changing to ${url}`);
-  //         openModal
-  //     };
-  //     router.events.on("hashChangeStart", onHashChangeStart);
-  //     return () => {
-  //         router.events.off("hashChangeStart", onHashChangeStart);
-  //     };
-  // }, [router.events]);
+  useEffect(() => {
+    const onHashChangeStart = (url: any) => {
+      // {?error_code=13
+      console.log(
+        "________---------__________--------**************************************"
+      );
+      console.log(`Path changing to ${url}`);
+      alert("Test");
+      // openModal
+    };
+    // router.events.on("hashChangeStart", onHashChangeStart);
+    // return () => {
+    //     router.events.off("hashChangeStart", onHashChangeStart);
+    // };
+    router.events.on("hashChangeStart", onHashChangeStart);
+
+    return () => {
+      router.events.off("hashChangeStart", onHashChangeStart);
+    };
+  }, [router.events]);
 
   return (
     <QueryClientProvider client={queryClient}>
