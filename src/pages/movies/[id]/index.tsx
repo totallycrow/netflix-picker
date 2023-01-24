@@ -16,15 +16,26 @@ interface IMovieProps {
 
 export default function MoviePage(props: IMovieProps) {
   console.log(props);
-
   const { isAuth } = props.loginData;
-  const { title, poster_path } = props.payload;
 
   const { imagePath, setFavourite, fav, buttonText } = useManageFavourites(
     props.isFavourite,
     props.loginData,
     props.payload
   );
+
+  if (props.payload.id === "ERROR_FETCHING_DATA")
+    return (
+      <div>
+        <div>
+          <Header isAuth={isAuth} />
+          <MainMenu></MainMenu>
+          <div>Cannot find movie data</div>
+        </div>
+      </div>
+    );
+
+  const { title, poster_path } = props.payload;
 
   console.log(imagePath);
   console.log(buttonText);
@@ -33,39 +44,6 @@ export default function MoviePage(props: IMovieProps) {
     <div>
       <Header isAuth={isAuth} />
       <MainMenu></MainMenu>
-      {/* <div className="">{title}</div>
-      <div>
-        <Image
-          src={"https://image.tmdb.org/t/p/w500/" + poster_path}
-          alt="Dan Abramov"
-          boxSize="200px"
-          objectFit="cover"
-        />
-      </div>
-
-      <div>
-        {fav ? (
-          <div>
-            <button onClick={() => setFavourite()}>
-              Remove From Favourites
-            </button>
-          </div>
-        ) : (
-          <div>
-            <button
-              onClick={() => {
-                if (isAuth) {
-                  setFavourite();
-                } else {
-                  alert("Log in to add to favourites!");
-                }
-              }}
-            >
-              Add To Favourites
-            </button>
-          </div>
-        )}
-      </div> */}
       <CardItem
         imagePath={imagePath}
         title={title}
@@ -82,12 +60,24 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   context
 ) => {
   const movieId = context.params!.id;
+
   console.log("PARAMS:", movieId);
   const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
   const loginData = await moviesAPI.loginControl(sessionId);
 
   // const movieData = await moviesAPI.getMovie("315162");
-  const movieData = await moviesAPI.getMovie(movieId);
+
+  if (!movieId)
+    return {
+      props: {
+        loginData: loginData,
+        sessionId: "NOT_AUTHORIZED",
+        isFavourite: false,
+        payload: erroredMovie,
+      },
+    };
+
+  const movieData = await moviesAPI.getMovie(movieId[0]);
 
   // const router = useRouter();
 
@@ -115,9 +105,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
     return {
       props: {
         loginData: loginData,
-        sessionId: "NOT_AUTHORIZED",
         isFavourite: false,
-
         ...movieData,
       },
     };
@@ -136,17 +124,14 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   return {
     props: {
       loginData: loginData,
-      sessionId: "NOT_AUTHORIZED",
       isFavourite: isFav,
-
       ...movieData,
     },
   };
 };
 
 type HomePageProps = {
-  loginData: any;
-  sessionId: string;
+  loginData: ILoginData;
 };
 
 interface ILoginData {
@@ -157,3 +142,20 @@ interface ILoginData {
   message: string;
   lastValidated: string;
 }
+
+const erroredMovie = {
+  adult: "",
+  backdrop_path: "",
+  genre_ids: [],
+  id: "ERROR_FETCHING_DATA",
+  original_language: "",
+  original_title: "",
+  overview: "",
+  popularity: "",
+  poster_path: "",
+  release_date: "",
+  title: "",
+  video: false,
+  vote_average: "",
+  vote_count: "",
+};
