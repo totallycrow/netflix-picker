@@ -119,6 +119,29 @@ export default class moviesAPI {
     }
   }
 
+  public static async isFavourite(
+    userId: string,
+    sessionId: string,
+    movieId: string
+  ) {
+    // moviePage - is it in favourites?
+
+    // fetch all favourites for the user
+    const movies = await moviesAPI.getFavouriteMovies(userId, sessionId);
+
+    if (!movies || "errorMessage" in movies) return false;
+
+    const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
+
+    const isFav = favMoviesIds.some((id) => {
+      return movieId === id;
+    });
+
+    return isFav;
+
+    // find and return
+  }
+
   // **************************************************
   // *************** FETCH HANDLER ********************
   // **************************************************
@@ -284,7 +307,7 @@ interface fetcherConfig {
   movieId?: string;
 }
 
-interface IMovie {
+export interface IMovie {
   adult: boolean;
   backdrop_path: string;
   genre_ids: string[];

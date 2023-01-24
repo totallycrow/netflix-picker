@@ -96,30 +96,36 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   console.log("&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   // console.log(movieData);
 
-  const movies = await moviesAPI.getFavouriteMovies(
+  const isFav = await moviesAPI.isFavourite(
     loginData.userId,
-    sessionId
+    sessionId,
+    movieId[0]
   );
 
-  if (!loginData.isAuth) {
-    return {
-      props: {
-        loginData: loginData,
-        isFavourite: false,
-        ...movieData,
-      },
-    };
-  }
+  // const movies = await moviesAPI.getFavouriteMovies(
+  //   loginData.userId,
+  //   sessionId
+  // );
 
-  const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
+  // if (!loginData.isAuth) {
+  //   return {
+  //     props: {
+  //       loginData: loginData,
+  //       isFavourite: false,
+  //       ...movieData,
+  //     },
+  //   };
+  // }
 
-  const isFav = favMoviesIds.some((id) => {
-    console.log(id);
-    console.log(movieData.payload.id);
+  // const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
 
-    return movieData.payload.id === id;
-  });
-  console.log(isFav);
+  // const isFav = favMoviesIds.some((id) => {
+  //   console.log(id);
+  //   console.log(movieData.payload.id);
+
+  //   return movieData.payload.id === id;
+  // });
+  // console.log(isFav);
 
   return {
     props: {
