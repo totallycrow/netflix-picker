@@ -21,13 +21,14 @@ interface IMovieProps {
   payload: IMovie;
 }
 
-export const CardItem = ({ isFavourite, loginData, payload }: IMovieProps) => {
+export const CardItem = (props: any) => {
+  console.log(props);
   return (
     <div>
       <Card maxW="sm">
         <CardBody>
           <Image
-            src={`${props.imageLink}`}
+            src={`${props.imagePath}`}
             alt="Green double couch with wooden legs"
             borderRadius="lg"
             boxSize="200px"
@@ -48,9 +49,13 @@ export const CardItem = ({ isFavourite, loginData, payload }: IMovieProps) => {
         <Divider />
         <CardFooter>
           <ButtonGroup spacing="2">
-            {/* <Button variant="solid" colorScheme="blue">
-              Buy now
-            </Button> */}
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={() => props.buttonCallback()}
+            >
+              {props.buttonText}
+            </Button>
             {/* <Button variant="ghost" colorScheme="blue">
               Add to cart
             </Button> */}

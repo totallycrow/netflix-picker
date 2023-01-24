@@ -13,15 +13,22 @@ export default function useManageFavourites(
 
   const [fav, setFav] = useState(isFavourite);
   const imagePath = imgBaseUrl + poster_path;
+  const toggleFavourite = !fav;
 
-  const setFavourite = (favouriteStatus: boolean) => {
-    if (isAuth) {
-      moviesAPI.setFavourite(userId, sessionId, id, favouriteStatus);
-      setFav(favouriteStatus);
+  const setFavourite = () => {
+    if (!isAuth) {
+      alert("Log in to add to favourites");
+      return;
     }
+    moviesAPI.setFavourite(userId, sessionId, id, toggleFavourite);
+    setFav(toggleFavourite);
   };
 
-  return { imagePath, setFavourite, fav };
+  console.log(fav);
+  const buttonText = fav ? "Remove from Favourites" : "Add to Favourites";
+  console.log(buttonText);
+
+  return { imagePath, setFavourite, fav, buttonText };
 }
 
 interface IMovieProps {

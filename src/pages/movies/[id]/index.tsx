@@ -17,20 +17,23 @@ interface IMovieProps {
 export default function MoviePage(props: IMovieProps) {
   console.log(props);
 
-  const { userId, sessionId, isAuth } = props.loginData;
+  const { isAuth } = props.loginData;
   const { title, poster_path } = props.payload;
 
-  const { imagePath, setFavourite, fav } = useManageFavourites(
+  const { imagePath, setFavourite, fav, buttonText } = useManageFavourites(
     props.isFavourite,
     props.loginData,
     props.payload
   );
 
+  console.log(imagePath);
+  console.log(buttonText);
+
   return (
     <div>
       <Header isAuth={isAuth} />
       <MainMenu></MainMenu>
-      <div className="">{title}</div>
+      {/* <div className="">{title}</div>
       <div>
         <Image
           src={"https://image.tmdb.org/t/p/w500/" + poster_path}
@@ -43,7 +46,7 @@ export default function MoviePage(props: IMovieProps) {
       <div>
         {fav ? (
           <div>
-            <button onClick={() => setFavourite(false)}>
+            <button onClick={() => setFavourite()}>
               Remove From Favourites
             </button>
           </div>
@@ -52,7 +55,7 @@ export default function MoviePage(props: IMovieProps) {
             <button
               onClick={() => {
                 if (isAuth) {
-                  setFavourite(true);
+                  setFavourite();
                 } else {
                   alert("Log in to add to favourites!");
                 }
@@ -62,15 +65,13 @@ export default function MoviePage(props: IMovieProps) {
             </button>
           </div>
         )}
-      </div>
-      {/* <CardItem
-        imageLink={
-          "https://image.tmdb.org/t/p/w500/" + props.payload.poster_path
-        }
-        title={props.payload.title}
-        loginData={props.loginData}
-        payload={props.payload}
-      /> */}
+      </div> */}
+      <CardItem
+        imagePath={imagePath}
+        title={title}
+        buttonText={buttonText}
+        buttonCallback={setFavourite}
+      />
     </div>
   );
 }
