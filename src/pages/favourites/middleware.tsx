@@ -2,10 +2,10 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import moviesAPI from "./services/tmdb/moviesAPI";
+import moviesAPI from "../../services/tmdb/moviesAPI";
 
 export async function middleware(request: NextRequest) {
-  console.log("?? Hello from Middleware ??");
+  console.log("?? Hello from Middleware - FAVOURITES PAGE ??");
   //   if (request.nextUrl.pathname.startsWith("/about")) {
   //     return NextResponse.rewrite(new URL("/about-2", request.url));
   //   }

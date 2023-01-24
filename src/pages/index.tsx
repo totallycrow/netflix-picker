@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import moviesAPI from "../services/tmdb/moviesAPI";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
-import { CardItem } from "../components/CardItem";
+import { CardItem } from "../components/movieCard/CardItem";
 import { Box } from "@chakra-ui/react";
 import { Center, Square, Circle } from "@chakra-ui/react";
 import { Container } from "@chakra-ui/react";
@@ -122,7 +122,7 @@ type HomePageProps = {
     loginData: ILoginData;
   };
   sectionBody: {
-    featuredMovies: {};
+    featuredMovies: IMovie[];
   };
 };
 
@@ -133,4 +133,21 @@ interface ILoginData {
   userId: any;
   message: string;
   lastValidated: string;
+}
+
+export interface IMovie {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: string[];
+  id: string;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: string;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: string;
+  vote_count: string;
 }

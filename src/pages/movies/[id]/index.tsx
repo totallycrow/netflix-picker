@@ -1,27 +1,39 @@
 import { GetServerSideProps } from "next";
-import moviesAPI from "../../../services/tmdb/moviesAPI";
+import moviesAPI, { IMovie } from "../../../services/tmdb/moviesAPI";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { Header } from "../../../components/header/Header";
 import { MainMenu } from "../../../components/MainMenu";
 import { Image } from "@chakra-ui/react";
 import { useState } from "react";
+import { CardItem } from "../../../components/movieCard/CardItem";
+import useManageFavourites from "../../../hooks/useManageFavourites";
 
-export default function MoviePage(props: any) {
+interface IMovieProps {
+  isFavourite: boolean;
+  loginData: ILoginData;
+  payload: IMovie;
+}
+
+export default function MoviePage(props: IMovieProps) {
   console.log(props);
-  const [fav, setFav] = useState(props.isFavourite);
 
   const { userId, sessionId, isAuth } = props.loginData;
+  const { title, poster_path } = props.payload;
 
-  console.log(fav);
+  const { imagePath, setFavourite, fav } = useManageFavourites(
+    props.isFavourite,
+    props.loginData,
+    props.payload
+  );
 
   return (
     <div>
-      <Header isAuth={props.loginData.isAuth} />
+      <Header isAuth={isAuth} />
       <MainMenu></MainMenu>
-      <div className="text-center">{props.payload.title}</div>
+      <div className="">{title}</div>
       <div>
         <Image
-          src={"https://image.tmdb.org/t/p/w500/" + props.payload.poster_path}
+          src={"https://image.tmdb.org/t/p/w500/" + poster_path}
           alt="Dan Abramov"
           boxSize="200px"
           objectFit="cover"
@@ -31,19 +43,7 @@ export default function MoviePage(props: any) {
       <div>
         {fav ? (
           <div>
-            <button
-              onClick={() => {
-                if (isAuth) {
-                  moviesAPI.setFavourite(
-                    userId,
-                    sessionId,
-                    props.payload.id,
-                    false
-                  );
-                  setFav(false);
-                }
-              }}
-            >
+            <button onClick={() => setFavourite(false)}>
               Remove From Favourites
             </button>
           </div>
@@ -52,13 +52,7 @@ export default function MoviePage(props: any) {
             <button
               onClick={() => {
                 if (isAuth) {
-                  moviesAPI.setFavourite(
-                    userId,
-                    sessionId,
-                    props.payload.id,
-                    true
-                  );
-                  setFav(true);
+                  setFavourite(true);
                 } else {
                   alert("Log in to add to favourites!");
                 }
@@ -69,6 +63,14 @@ export default function MoviePage(props: any) {
           </div>
         )}
       </div>
+      {/* <CardItem
+        imageLink={
+          "https://image.tmdb.org/t/p/w500/" + props.payload.poster_path
+        }
+        title={props.payload.title}
+        loginData={props.loginData}
+        payload={props.payload}
+      /> */}
     </div>
   );
 }
@@ -145,3 +147,12 @@ type HomePageProps = {
   loginData: any;
   sessionId: string;
 };
+
+interface ILoginData {
+  isLoggedIn: boolean;
+  isAuth: boolean;
+  sessionId: string;
+  userId: any;
+  message: string;
+  lastValidated: string;
+}
