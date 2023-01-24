@@ -59,15 +59,15 @@ export default function MoviePage(props: IMovieProps) {
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   context
 ) => {
-  const movieId = context.params!.id;
+  const movieIdParam = context.params!.id;
 
-  console.log("PARAMS:", movieId);
+  console.log("PARAMS:", movieIdParam);
   const sessionId = context.req.cookies.sessionId || "NOT_AUTHORIZED";
   const loginData = await moviesAPI.loginControl(sessionId);
 
   // const movieData = await moviesAPI.getMovie("315162");
 
-  if (!movieId)
+  if (!movieIdParam)
     return {
       props: {
         loginData: loginData,
@@ -77,7 +77,12 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
       },
     };
 
-  const movieData = await moviesAPI.getMovie(movieId[0]);
+  console.log("_____-_--_----_______");
+  console.log(movieIdParam);
+
+  // test for array
+  const movieId = Array.isArray(movieIdParam) ? movieIdParam[0] : movieIdParam;
+  const movieData = await moviesAPI.getMovie(movieId);
 
   // const router = useRouter();
 
@@ -99,7 +104,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   const isFav = await moviesAPI.isFavourite(
     loginData.userId,
     sessionId,
-    movieId[0]
+    movieId
   );
 
   // const movies = await moviesAPI.getFavouriteMovies(
@@ -130,7 +135,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   return {
     props: {
       loginData: loginData,
-      isFavourite: isFav,
+      isFavourite: false,
       ...movieData,
     },
   };
