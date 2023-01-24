@@ -13,7 +13,7 @@ export const MainMenu = () => {
       </div>
       <div className="p-2">
         {/* <Link href="http://localhost:3000/#test">hash test</Link> */}
-        <button onClick={(url) => router.replace(router.pathname + "/#test-1")}>
+        <button onClick={(url) => router.replace(router.asPath + "/#test-1")}>
           Hash Test
         </button>
       </div>

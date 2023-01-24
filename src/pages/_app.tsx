@@ -22,7 +22,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         "________---------__________--------**************************************"
       );
       console.log(url);
-      console.log(`Path changing to ${url}`);
+      console.log(`Path changing to ${router.asPath}`);
 
       if (url.includes("#")) {
         alert("Test");

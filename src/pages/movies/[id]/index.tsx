@@ -101,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   //   };
   // }
   console.log("&&&^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-  console.log(movieData);
+  // console.log(movieData);
 
   const movies = await moviesAPI.getFavouriteMovies(
     loginData.userId,
