@@ -12,14 +12,19 @@ import { Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { Header } from "../components/header/Header";
 import { MainMenu } from "../components/MainMenu";
-
+import { useRouter } from "next/router";
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
 export default function Home(props: HomePageProps) {
   const [isAuthorized, setIsAuthorized] = useState(0);
   const [testUserData, setTestUserData] = useState("");
+  const router = useRouter();
   console.log(props);
   console.log(props.sectionBody.featuredMovies[0].backdrop_path);
+
+  const handleLink = (movieId: string) => {
+    router.push("http://localhost:3000/movies/" + movieId);
+  };
 
   useEffect(() => {
     if (props.sharedData.loginData.isAuth) setIsAuthorized(1);
@@ -58,24 +63,36 @@ export default function Home(props: HomePageProps) {
         >
           {props.sectionBody.featuredMovies.map((movie) => {
             return (
+              // <div key={movie.id}>
+              //   <GridItem w="100%">
+              //     <Center>
+              //       <Box padding="4" color="black" maxW="md">
+              //         <Link href={"http://localhost:3000/movies/" + movie.id}>
+              //           <Image
+              //             src={
+              //               "https://image.tmdb.org/t/p/w500/" +
+              //               movie.poster_path
+              //             }
+              //             alt="Dan Abramov"
+              //             boxSize="200px"
+              //             objectFit="cover"
+              //           />
+              //         </Link>
+              //       </Box>
+              //     </Center>
+              //   </GridItem>
+              // </div>
               <div key={movie.id}>
-                <GridItem w="100%">
-                  <Center>
-                    <Box padding="4" color="black" maxW="md">
-                      <Link href={"http://localhost:3000/movies/" + movie.id}>
-                        <Image
-                          src={
-                            "https://image.tmdb.org/t/p/w500/" +
-                            movie.poster_path
-                          }
-                          alt="Dan Abramov"
-                          boxSize="200px"
-                          objectFit="cover"
-                        />
-                      </Link>
-                    </Box>
-                  </Center>
-                </GridItem>
+                <CardItem
+                  imagePath={
+                    "https://image.tmdb.org/t/p/w500/" + movie.poster_path
+                  }
+                  title={movie.title}
+                  buttonText={"see more"}
+                  buttonCallback={() => handleLink(movie.id)}
+                  description={movie.overview.slice(0, 100) + "..."}
+                  favouriteSection={true}
+                />
               </div>
             );
           })}

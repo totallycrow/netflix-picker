@@ -49,6 +49,8 @@ export default function MoviePage(props: IMovieProps) {
         title={title}
         buttonText={buttonText}
         buttonCallback={setFavourite}
+        description={props.payload.overview}
+        favouriteSection={true}
       />
     </div>
   );
