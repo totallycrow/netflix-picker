@@ -1,20 +1,59 @@
 import { GetServerSideProps } from "next";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { CardItem } from "../../components/movieCard/CardItem";
+import useManageFavourites from "../../hooks/useManageFavourites";
 import moviesAPI from "../../services/tmdb/moviesAPI";
 
-export default function favourites(props: FavouritesPageProps) {
+export default function Favourites(props: FavouritesPageProps) {
+  const [favList, setFavList] = useState(props.sectionBody.favouriteMovies);
   console.log(props);
   // if (props.sharedData.loginData.sessionId === "NOT_AUTHORIZED") {
   //   return <div>Log in to view this page</div>;
   // }
+  const router = useRouter();
+  const handleLink = (movieId: string) => {
+    router.push("http://localhost:3000/movies/" + movieId);
+  };
+
+  const { userId, sessionId } = props.sharedData.loginData;
+
+  useEffect(() => {
+    console.log(favList);
+  }, [favList]);
 
   return (
     <div>
       <h1>My Favourites</h1>
 
       <div>
-        {props.sectionBody.favouriteMovies.map((movie: IMovie) => (
-          <div key={movie.id}>{movie.title}</div>
+        {favList.map((movie: IMovie) => (
+          <div key={movie.id}>
+            <CardItem
+              imagePath={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+              title={movie.title}
+              buttonText={"Remove from favourites"}
+              buttonCallback={async () => {
+                await moviesAPI.setFavourite(
+                  userId,
+                  sessionId,
+                  movie.id,
+                  false
+                );
+                console.log("CALLBACK");
+                setFavList((list) => {
+                  console.log(list);
+                  const newList = list.filter(
+                    (listMovie) => movie.id != listMovie.id
+                  );
+                  console.log(newList);
+                  return newList;
+                });
+              }}
+              description={movie.overview.slice(0, 100) + "..."}
+              favouriteSection={true}
+            />
+          </div>
         ))}
       </div>
     </div>
