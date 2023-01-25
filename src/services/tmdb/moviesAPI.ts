@@ -132,10 +132,16 @@ export default class moviesAPI {
     if (!movies || "errorMessage" in movies) return false;
 
     const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
+    console.log(favMoviesIds);
 
     const isFav = favMoviesIds.some((id) => {
-      return movieId === id;
+      console.log(id);
+      console.log(movieId);
+      return String(movieId) === String(id);
     });
+
+    console.log(">>>>>>>>>>>>>>>>>> IS FAV");
+    console.log(isFav);
 
     return isFav;
 

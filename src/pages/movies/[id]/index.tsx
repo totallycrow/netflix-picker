@@ -106,6 +106,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
     sessionId,
     movieId
   );
+  console.log(isFav);
 
   // const movies = await moviesAPI.getFavouriteMovies(
   //   loginData.userId,
@@ -135,7 +136,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   return {
     props: {
       loginData: loginData,
-      isFavourite: false,
+      isFavourite: isFav,
       ...movieData,
     },
   };
