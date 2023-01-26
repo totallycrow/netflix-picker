@@ -1,3 +1,4 @@
+import { Center, Container } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -27,43 +28,49 @@ export default function Favourites(props: FavouritesPageProps) {
 
   return (
     <Layout isAuth={props.sharedData.loginData.isAuth}>
-      <div>
-        <h1>My Favourites</h1>
-
+      <Container maxW="container.xl">
         <div>
-          {favList.map((movie: IMovie) => (
-            <div key={movie.id}>
-              <CardItem
-                imagePath={
-                  "https://image.tmdb.org/t/p/w500/" + movie.poster_path
-                }
-                title={movie.title}
-                buttonText={"Remove from favourites"}
-                id={movie.id}
-                buttonCallback={async () => {
-                  await moviesAPI.setFavourite(
-                    userId,
-                    sessionId,
-                    movie.id,
-                    false
-                  );
-                  console.log("CALLBACK");
-                  setFavList((list) => {
-                    console.log(list);
-                    const newList = list.filter(
-                      (listMovie) => movie.id != listMovie.id
-                    );
-                    console.log(newList);
-                    return newList;
-                  });
-                }}
-                description={movie.overview.slice(0, 100) + "..."}
-                favouriteSection={true}
-              />
-            </div>
-          ))}
+          <h1>My Favourites</h1>
+
+          <div>
+            {favList.map((movie: IMovie) => (
+              <div key={movie.id}>
+                <Center>
+                  <CardItem
+                    imagePath={
+                      "https://image.tmdb.org/t/p/w500/" + movie.poster_path
+                    }
+                    title={movie.title}
+                    buttonText={"Remove from favourites"}
+                    id={movie.id}
+                    w={"2xl"}
+                    maxW={"2xl"}
+                    buttonCallback={async () => {
+                      await moviesAPI.setFavourite(
+                        userId,
+                        sessionId,
+                        movie.id,
+                        false
+                      );
+                      console.log("CALLBACK");
+                      setFavList((list) => {
+                        console.log(list);
+                        const newList = list.filter(
+                          (listMovie) => movie.id != listMovie.id
+                        );
+                        console.log(newList);
+                        return newList;
+                      });
+                    }}
+                    description={movie.overview.slice(0, 5000) + "..."}
+                    favouriteSection={true}
+                  />
+                </Center>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Container>
     </Layout>
   );
 }

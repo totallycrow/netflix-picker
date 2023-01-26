@@ -25,9 +25,10 @@ interface IMovieProps {
 
 export const CardItem = (props: any) => {
   console.log(props);
+  const maxW = props.maxW || "sm";
   return (
     <div>
-      <Card maxW="sm">
+      <Card maxW={maxW}>
         <CardBody>
           <Image
             src={`${props.imagePath}`}

@@ -1,6 +1,12 @@
 import { GetServerSideProps } from "next";
 import moviesAPI, { IMovie } from "../../../services/tmdb/moviesAPI";
-import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Center,
+} from "@chakra-ui/react";
 import { Header } from "../../../components/header/Header";
 import { MainMenu } from "../../../components/MainMenu";
 import { Image } from "@chakra-ui/react";
@@ -42,14 +48,18 @@ export default function MoviePage(props: IMovieProps) {
   return (
     <Layout isAuth={props.sharedData.loginData.isAuth}>
       <div>
-        <CardItem
-          imagePath={imagePath}
-          title={title}
-          buttonText={buttonText}
-          buttonCallback={setFavourite}
-          description={props.movieData.overview}
-          favouriteSection={true}
-        />
+        <Center>
+          <CardItem
+            imagePath={imagePath}
+            title={title}
+            buttonText={buttonText}
+            buttonCallback={setFavourite}
+            description={props.movieData.overview}
+            favouriteSection={true}
+            w={"2xl"}
+            maxW={"2xl"}
+          />
+        </Center>
       </div>
     </Layout>
   );
