@@ -28,7 +28,7 @@ export const CardItem = (props: any) => {
   const maxW = props.maxW || "sm";
   return (
     <div>
-      <Card maxW={maxW}>
+      <Card maxW={maxW} w={props.w}>
         <CardBody>
           <Image
             src={`${props.imagePath}`}
