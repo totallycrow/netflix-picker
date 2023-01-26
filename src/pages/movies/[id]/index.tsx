@@ -7,6 +7,7 @@ import { Image } from "@chakra-ui/react";
 import { useState } from "react";
 import { CardItem } from "../../../components/movieCard/CardItem";
 import useManageFavourites from "../../../hooks/useManageFavourites";
+import Layout from "../../../components/layout/Layout";
 
 interface IMovieProps {
   isFavourite: boolean;
@@ -16,43 +17,41 @@ interface IMovieProps {
 
 export default function MoviePage(props: IMovieProps) {
   console.log(props);
-  const { isAuth } = props.loginData;
+  const { isAuth } = props.sharedData.loginData;
 
   const { imagePath, setFavourite, fav, buttonText } = useManageFavourites(
-    props.isFavourite,
-    props.loginData,
-    props.payload
+    props.movieData.isFavourite,
+    props.sharedData.loginData,
+    props.movieData
   );
 
-  if (props.payload.id === "ERROR_FETCHING_DATA")
+  if (props.movieData.id === "ERROR_FETCHING_DATA")
     return (
       <div>
         <div>
-          <Header isAuth={isAuth} />
-          <MainMenu></MainMenu>
           <div>Cannot find movie data</div>
         </div>
       </div>
     );
 
-  const { title, poster_path } = props.payload;
+  const { title, poster_path } = props.movieData;
 
   console.log(imagePath);
   console.log(buttonText);
 
   return (
-    <div>
-      <Header isAuth={isAuth} />
-      <MainMenu></MainMenu>
-      <CardItem
-        imagePath={imagePath}
-        title={title}
-        buttonText={buttonText}
-        buttonCallback={setFavourite}
-        description={props.payload.overview}
-        favouriteSection={true}
-      />
-    </div>
+    <Layout isAuth={props.sharedData.loginData.isAuth}>
+      <div>
+        <CardItem
+          imagePath={imagePath}
+          title={title}
+          buttonText={buttonText}
+          buttonCallback={setFavourite}
+          description={props.movieData.overview}
+          favouriteSection={true}
+        />
+      </div>
+    </Layout>
   );
 }
 
@@ -137,9 +136,13 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 
   return {
     props: {
-      loginData: loginData,
-      isFavourite: isFav,
-      ...movieData,
+      sharedData: {
+        loginData,
+      },
+      movieData: {
+        isFavourite: isFav,
+        ...movieData.payload,
+      },
     },
   };
 };

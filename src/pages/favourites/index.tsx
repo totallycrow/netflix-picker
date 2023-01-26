@@ -1,6 +1,9 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { Header } from "../../components/header/Header";
+import Layout from "../../components/layout/Layout";
+import { MainMenu } from "../../components/MainMenu";
 import { CardItem } from "../../components/movieCard/CardItem";
 import useManageFavourites from "../../hooks/useManageFavourites";
 import moviesAPI from "../../services/tmdb/moviesAPI";
@@ -23,40 +26,45 @@ export default function Favourites(props: FavouritesPageProps) {
   }, [favList]);
 
   return (
-    <div>
-      <h1>My Favourites</h1>
-
+    <Layout isAuth={props.sharedData.loginData.isAuth}>
       <div>
-        {favList.map((movie: IMovie) => (
-          <div key={movie.id}>
-            <CardItem
-              imagePath={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
-              title={movie.title}
-              buttonText={"Remove from favourites"}
-              buttonCallback={async () => {
-                await moviesAPI.setFavourite(
-                  userId,
-                  sessionId,
-                  movie.id,
-                  false
-                );
-                console.log("CALLBACK");
-                setFavList((list) => {
-                  console.log(list);
-                  const newList = list.filter(
-                    (listMovie) => movie.id != listMovie.id
+        <h1>My Favourites</h1>
+
+        <div>
+          {favList.map((movie: IMovie) => (
+            <div key={movie.id}>
+              <CardItem
+                imagePath={
+                  "https://image.tmdb.org/t/p/w500/" + movie.poster_path
+                }
+                title={movie.title}
+                buttonText={"Remove from favourites"}
+                id={movie.id}
+                buttonCallback={async () => {
+                  await moviesAPI.setFavourite(
+                    userId,
+                    sessionId,
+                    movie.id,
+                    false
                   );
-                  console.log(newList);
-                  return newList;
-                });
-              }}
-              description={movie.overview.slice(0, 100) + "..."}
-              favouriteSection={true}
-            />
-          </div>
-        ))}
+                  console.log("CALLBACK");
+                  setFavList((list) => {
+                    console.log(list);
+                    const newList = list.filter(
+                      (listMovie) => movie.id != listMovie.id
+                    );
+                    console.log(newList);
+                    return newList;
+                  });
+                }}
+                description={movie.overview.slice(0, 100) + "..."}
+                favouriteSection={true}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

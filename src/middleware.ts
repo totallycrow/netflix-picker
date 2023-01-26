@@ -5,20 +5,22 @@ import type { NextRequest } from "next/server";
 import moviesAPI from "./services/tmdb/moviesAPI";
 
 export async function middleware(request: NextRequest) {
-  console.log("?? Hello from Middleware ??");
-  //   if (request.nextUrl.pathname.startsWith("/about")) {
-  //     return NextResponse.rewrite(new URL("/about-2", request.url));
-  //   }
+  // console.log("?? Hello from Middleware ??");
+  // if (request.nextUrl.pathname === "/movies") {
+  //   return NextResponse.rewrite(new URL("/", request.url));
+  // }
   //   if (request.nextUrl.pathname.startsWith("/dashboard")) {
   //     return NextResponse.rewrite(new URL("/dashboard/user", request.url));
   //   }
-
-  if (request.nextUrl.pathname.startsWith("/favourites")) {
-    const cookie = request.cookies.get("sessionId")?.value;
-    const loginData = await moviesAPI.loginControl(cookie);
-    if (!loginData.isAuth)
-      return NextResponse.redirect(new URL("/", request.url));
-  }
+  // if (request.nextUrl.pathname.startsWith("/favourites")) {
+  //   const cookie = request.cookies.get("sessionId")?.value;
+  //   const loginData = await moviesAPI.loginControl(cookie);
+  //   if (!loginData.isAuth)
+  //     return NextResponse.redirect(new URL("/", request.url));
+  // }
+  // if (request.nextUrl.pathname.("/movies")) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 }
 
 // export function middleware(request: NextRequest) {

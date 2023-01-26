@@ -17,6 +17,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
+import Layout from "../components/layout/Layout";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
+        {/* <Layout isAuth={pageProps.sharedData.loginData.isAuth}> */}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
@@ -74,6 +76,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        {/* </Layout> */}
         <Hydrate state={pageProps.dehydratedState}>
           {/* <ErrorModalProvider value={{openModal, isModalOpened}}> */}
           <Component {...pageProps} />

@@ -15,6 +15,7 @@ import { Text } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import { IMovie } from "../../services/tmdb/moviesAPI";
 import { FavouriteBlock } from "./FavouriteBlock";
+import Link from "next/link";
 
 interface IMovieProps {
   isFavourite: boolean;
@@ -36,7 +37,15 @@ export const CardItem = (props: any) => {
             objectFit="cover"
           />
           <Stack mt="6" spacing="3">
-            <Heading size="md">{`${props.title}`}</Heading>
+            <Heading size="md">
+              {props.id === "" || props.id === undefined ? (
+                <div>{`${props.title}`}</div>
+              ) : (
+                <Link href={`http://localhost:3000/movies/${props.id}`}>
+                  {`${props.title}`}
+                </Link>
+              )}
+            </Heading>
             <Text>{props.description}</Text>
             {/* <Text color="blue.600" fontSize="2xl">
               $450

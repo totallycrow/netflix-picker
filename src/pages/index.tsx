@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Header } from "../components/header/Header";
 import { MainMenu } from "../components/MainMenu";
 import { useRouter } from "next/router";
+import Layout from "../components/layout/Layout";
 // https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7
 
 export default function Home(props: HomePageProps) {
@@ -20,7 +21,6 @@ export default function Home(props: HomePageProps) {
   const [testUserData, setTestUserData] = useState("");
   const router = useRouter();
   console.log(props);
-  console.log(props.sectionBody.featuredMovies[0].backdrop_path);
 
   const handleLink = (movieId: string) => {
     router.push("http://localhost:3000/movies/" + movieId);
@@ -39,9 +39,7 @@ export default function Home(props: HomePageProps) {
   }, [isAuthorized, props.sharedData.loginData.userId]);
 
   return (
-    <div>
-      <Header isAuth={props.sharedData.loginData.isAuth} />
-      <MainMenu></MainMenu>
+    <Layout isAuth={props.sharedData.loginData.isAuth}>
       {/* <h1>test</h1>
 
       <div>Is Authorised? {isAuthorized}</div>
@@ -92,6 +90,7 @@ export default function Home(props: HomePageProps) {
                   buttonCallback={() => handleLink(movie.id)}
                   description={movie.overview.slice(0, 100) + "..."}
                   favouriteSection={true}
+                  id={movie.id}
                 />
               </div>
             );
@@ -100,7 +99,7 @@ export default function Home(props: HomePageProps) {
 
         {/* <CardItem></CardItem> */}
       </Container>
-    </div>
+    </Layout>
   );
 }
 
