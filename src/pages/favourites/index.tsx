@@ -26,6 +26,13 @@ export default function Favourites(props: FavouritesPageProps) {
     console.log(favList);
   }, [favList]);
 
+  if (!props.sharedData.loginData.isAuth)
+    return (
+      <Layout isAuth={false}>
+        <div>Login In To See Your Favourite Movies</div>
+      </Layout>
+    );
+
   return (
     <Layout isAuth={props.sharedData.loginData.isAuth}>
       <Container maxW="container.xl">

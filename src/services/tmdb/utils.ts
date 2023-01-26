@@ -1,3 +1,5 @@
+import { IMovie } from "./moviesAPI";
+
 export const generateSessionQuery = (token: string) => {
   const queryBody = {
     request_token: token,
@@ -33,4 +35,16 @@ export const generateFavouritesQuery = (
   };
 
   return query;
+};
+
+export const selectMoviesFromList = (
+  moviesList: IMovie[],
+  numbersOfMovies: number
+) => {
+  let selectedMovies = [];
+
+  for (let i = 0; i < numbersOfMovies; i++) {
+    selectedMovies.push(moviesList[i]);
+  }
+  return selectedMovies;
 };
