@@ -21,8 +21,9 @@ export interface FavouritesPageProps extends IMainProps {
   };
 }
 
-export interface IMovieProps {
-  isFavourite: boolean;
-  loginData: ILoginData;
-  payload: IMovie;
+export interface IMovieProps extends IMainProps {
+  sectionBody: {
+    isFavourite: boolean;
+    movieData: IMovie;
+  };
 }
