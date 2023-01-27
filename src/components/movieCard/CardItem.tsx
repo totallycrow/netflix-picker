@@ -23,6 +23,14 @@ interface IMovieProps {
   payload: IMovie;
 }
 
+interface ICardConfig {
+  imagePath: string;
+  title: string;
+  description: string;
+  buttonCallback: () => void;
+  buttonText: string;
+}
+
 export const CardItem = (props: any) => {
   console.log(props);
   const maxW = props.maxW || "sm";

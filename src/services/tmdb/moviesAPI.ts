@@ -1,9 +1,17 @@
 import axios from "axios";
 import { generateFavouritesQuery } from "./utils";
-
-const host = "https://api.themoviedb.org/3/";
-
-// generateMovieURl = (movieId) => https://api.themoviedb.org/3/movie/${config.movieId}?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US
+import { loginController } from "./login/loginController";
+import * as accountManager from "./account";
+import * as moviesManager from "./movies";
+import * as fetcher from "./fetcher";
+import {
+  fetcherConfig,
+  ITokenSuccess,
+  RequestError,
+  RequestSuccess,
+} from "../../types/fetchingTypes";
+import { IUserId } from "../../types/accountTypes";
+import { IFavouriteMoviesList, IMovie } from "../../types/moviesTypes";
 
 export default class moviesAPI {
   // **************************************************
@@ -11,75 +19,28 @@ export default class moviesAPI {
   // **************************************************
 
   public static async getToken(): Promise<ITokenSuccess | RequestError> {
-    const data = await this.fetcher<ITokenSuccess>({
-      endpointType: "getToken",
-    });
-
-    if (!data.success) {
-      return data;
-    }
-
-    return {
-      success: true,
-      expires_at: data.payload.expires_at,
-      request_token: data.payload.request_token,
-    };
+    return accountManager.getToken();
   }
 
   // **************************************************
   public static async getUserId(
     userId: string
   ): Promise<IUserId | RequestError> {
-    const data = await this.fetcher<IUserIdSuccess>({
-      endpointType: "getUserId",
-      userId,
-    });
-    console.log(data);
-
-    if (!data.success) {
-      return data;
-    }
-
-    return {
-      userId: data.payload.id,
-    };
+    return accountManager.getUserId(userId);
   }
 
   // **************************************************
   public static async getMovie(
     movieId: string
   ): Promise<RequestSuccess<IMovie> | RequestError> {
-    const data = await this.fetcher<IMovie>({
-      endpointType: "getMovie",
-      movieId,
-    });
-    console.log(data);
-
-    if (!data.success) {
-      return data;
-    }
-
-    return {
-      success: true,
-      payload: data.payload,
-    };
+    return moviesManager.getMovie(movieId);
   }
 
   // **************************************************
   public static async getPopularMovies(): Promise<
     RequestSuccess<IMovie[]> | RequestError
   > {
-    const data = await this.fetcher<any>({ endpointType: "getPopularMovies" });
-    console.log(data);
-
-    if (!data.success) {
-      return data;
-    }
-
-    return {
-      success: true,
-      payload: data.payload.results,
-    };
+    return moviesManager.getPopularMovies();
   }
 
   // **************************************************
@@ -87,127 +48,41 @@ export default class moviesAPI {
     userId: string,
     sessionId: string
   ): Promise<IFavouriteMoviesList | RequestError> {
-    const data = await this.fetcher<IMoviesSuccess>({
-      endpointType: "getFavouriteMovies",
-      sessionId,
-      userId,
-    });
-    console.log(data);
-
-    if (!data.success) {
-      return data;
-    }
-
-    return {
-      favouriteMoviesList: data.payload.results,
-    };
+    return accountManager.getFavouriteMovies(userId, sessionId);
   }
 
+  // **************************************************
   public static async setFavourite(
     accountId: string,
     sessionId: string,
     movieId: string,
     isFavourite: boolean
   ) {
-    const URL = `https://api.themoviedb.org/3/account/${accountId}/favorite?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`;
-    const query = generateFavouritesQuery(movieId, isFavourite);
-    try {
-      const result = await fetch(URL, query);
-      return result;
-    } catch (e) {
-      return e;
-    }
+    return accountManager.setFavourite(
+      accountId,
+      sessionId,
+      movieId,
+      isFavourite
+    );
   }
 
+  // **************************************************
   public static async isFavourite(
     userId: string,
     sessionId: string,
     movieId: string
   ) {
-    // moviePage - is it in favourites?
-
-    // fetch all favourites for the user
-    const movies = await moviesAPI.getFavouriteMovies(userId, sessionId);
-
-    if (!movies || "errorMessage" in movies) return false;
-
-    const favMoviesIds = movies.favouriteMoviesList.map((movie) => movie.id);
-    console.log(favMoviesIds);
-
-    const isFav = favMoviesIds.some((id) => {
-      console.log(id);
-      console.log(movieId);
-      return String(movieId) === String(id);
-    });
-
-    console.log(">>>>>>>>>>>>>>>>>> IS FAV");
-    console.log(isFav);
-
-    return isFav;
-
-    // find and return
+    return accountManager.isFavourite(userId, sessionId, movieId);
   }
 
   // **************************************************
   // *************** FETCH HANDLER ********************
   // **************************************************
 
-  private static async fetcher<T>(
+  public static async fetcher<T>(
     config: fetcherConfig
   ): Promise<RequestSuccess<T> | RequestError> {
-    let URL = "";
-    console.log(config.endpointType);
-
-    if (config.endpointType === "getMovie") {
-      URL = `https://api.themoviedb.org/3/movie/${config.movieId}?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US`;
-    }
-
-    if (config.endpointType === "getPopularMovies") {
-      URL =
-        "https://api.themoviedb.org/3/movie/popular?api_key=0813f3326aa955f3707a6e8d13d652f7&language=en-US&page=1";
-    }
-
-    if (config.endpointType === "getToken") {
-      URL =
-        "https://api.themoviedb.org/3/authentication/token/new?api_key=0813f3326aa955f3707a6e8d13d652f7";
-    }
-    if (config.endpointType === "getUserId") {
-      URL = `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${config.sessionId}`;
-      if (!config.sessionId)
-        return {
-          success: false,
-          errorMessage: "Invalid parameter",
-        };
-    }
-    if (config.endpointType === "getFavouriteMovies") {
-      URL = `https://api.themoviedb.org/3/account/${config.userId}/favorite/movies?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${config.sessionId}&language=en-US&sort_by=created_at.asc&page=1`;
-      if (!config.sessionId || !config.userId)
-        return {
-          success: false,
-          errorMessage: "Invalid parameter",
-        };
-    }
-
-    if (URL === "")
-      return {
-        success: false,
-        errorMessage: "Invalid parameter",
-      };
-
-    try {
-      const data = await axios.get(URL).then((response) => response.data);
-      console.log(data);
-
-      return {
-        success: true,
-        payload: data,
-      };
-    } catch (err) {
-      return {
-        success: false,
-        errorMessage: err as string,
-      };
-    }
+    return fetcher.fetch(config);
   }
 
   // **************************************************
@@ -215,117 +90,6 @@ export default class moviesAPI {
   // **************************************************
 
   public static async loginControl(sessionId: string | undefined) {
-    const timeStamp = new Date(Date.now()).toUTCString();
-
-    // Check if cookie exists
-    if (sessionId === "NOT_AUTHORIZED" || !sessionId) {
-      return {
-        isLoggedIn: false,
-        isAuth: false,
-        sessionId: "NOT_AUTHORIZED",
-        userId: "NOT_FOUND",
-        message: "Invalid sessionId value",
-        lastValidated: timeStamp,
-      };
-    }
-
-    // If cookie exists, check if session is still valid
-    const data = await fetch(
-      `https://api.themoviedb.org/3/account?api_key=0813f3326aa955f3707a6e8d13d652f7&session_id=${sessionId}`
-    ).then((res) => res.json());
-
-    console.log(data);
-
-    if (data.success === false) {
-      return {
-        isLoggedIn: true,
-        isAuth: false,
-        sessionId: "NOT_AUTHORIZED",
-        userId: "NOT_FOUND",
-        message: "SessionId rejected",
-        lastValidated: timeStamp,
-      };
-    }
-
-    return {
-      isLoggedIn: true,
-      isAuth: true,
-      sessionId: sessionId,
-      userId: data.id,
-      message: "SessionId accepted",
-      lastValidated: timeStamp,
-    };
+    return await loginController(sessionId);
   }
-}
-
-// **************************************************
-// ********************* TYPES **********************
-// **************************************************
-
-interface ITokenSuccess {
-  success: boolean;
-  expires_at: string;
-  request_token: string;
-}
-
-interface IUserIdSuccess {
-  avatar: {
-    gravatar: { hash: string };
-    tmdb: { avatar_path: null | string };
-  };
-  id: string;
-  iso_639_1: string;
-  iso_3166_1: string;
-  name: string;
-  include_adult: boolean;
-  username: string;
-}
-
-interface IUserId {
-  userId: string;
-}
-
-interface IFavouriteMoviesList {
-  favouriteMoviesList: Array<any>;
-}
-
-export type RequestError = {
-  success: false;
-  errorMessage: string;
-};
-
-export type RequestSuccess<T> = {
-  success: true;
-  payload: T;
-};
-
-interface IMoviesSuccess {
-  page: string;
-  results: IMovie[];
-  total_pages: string;
-  total_results: string;
-}
-
-interface fetcherConfig {
-  endpointType: string;
-  sessionId?: string;
-  userId?: string;
-  movieId?: string;
-}
-
-export interface IMovie {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: string[];
-  id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: string;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: string;
-  vote_count: string;
 }

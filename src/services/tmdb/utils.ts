@@ -1,4 +1,6 @@
-import { IMovie } from "./moviesAPI";
+import { ILoginData } from "../../types/accountTypes";
+import { IMovie } from "../../types/moviesTypes";
+import { erroredMovie } from "./static";
 
 export const generateSessionQuery = (token: string) => {
   const queryBody = {
@@ -47,4 +49,18 @@ export const selectMoviesFromList = (
     selectedMovies.push(moviesList[i]);
   }
   return selectedMovies;
+};
+
+export const generateErrorMovieObject = (loginData: ILoginData) => {
+  return {
+    props: {
+      sharedData: {
+        loginData: loginData,
+      },
+      sectionBody: {
+        isFavourite: false,
+        movieData: erroredMovie,
+      },
+    },
+  };
 };

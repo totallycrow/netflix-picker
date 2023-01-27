@@ -15,3 +15,14 @@ export interface IMovie {
   vote_average: string;
   vote_count: string;
 }
+
+export interface IFavouriteMoviesList {
+  favouriteMoviesList: Array<any>;
+}
+
+export interface IMoviesSuccess {
+  page: string;
+  results: IMovie[];
+  total_pages: string;
+  total_results: string;
+}

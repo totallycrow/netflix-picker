@@ -1,7 +1,7 @@
 import { Center, Container } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/layout/Layout";
-import { MoviesList } from "../../components/moviesList/moviesList";
+import { MoviesList } from "../../components/moviesList/MoviesList";
 import { useFavouritesList } from "../../hooks/useFavouritesList";
 import FavouritesPreprocessor from "../../preprocessors/favouritesPreprocessor";
 import { FavouritesPageProps } from "../../types/propsTypes";

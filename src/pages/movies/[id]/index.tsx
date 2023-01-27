@@ -1,10 +1,8 @@
 import { GetServerSideProps } from "next";
-import moviesAPI, { IMovie } from "../../../services/tmdb/moviesAPI";
 import { Center } from "@chakra-ui/react";
 import useManageFavourites from "../../../hooks/useManageFavourites";
 import Layout from "../../../components/layout/Layout";
-import { generateErrorMovieObject } from "../../../services/tmdb/static";
-import { MoviesList } from "../../../components/moviesList/moviesList";
+import { MoviesList } from "../../../components/moviesList/MoviesList";
 import { IMovieProps } from "../../../types/propsTypes";
 import moviepagePreprocessor from "../../../preprocessors/moviepagePreprocessor";
 
@@ -41,8 +39,6 @@ export default function MoviePage(props: IMovieProps) {
     </Layout>
   );
 }
-
-// chakra-ui
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return moviepagePreprocessor(context);

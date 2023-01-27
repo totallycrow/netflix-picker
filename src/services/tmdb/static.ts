@@ -19,27 +19,3 @@ export const erroredMovie = {
   vote_average: "",
   vote_count: "",
 };
-
-export const generateErrorMovieObject = (loginData: ILoginData) => {
-  return {
-    props: {
-      sharedData: {
-        loginData: loginData,
-      },
-      sectionBody: {
-        isFavourite: false,
-        movieData: erroredMovie,
-      },
-    },
-  };
-};
-
-// props: {
-//   sharedData: {
-//     loginData: loginData,
-//   },
-//   sectionBody: {
-//     isFavourite: false,
-//     movieData: erroredMovie,
-//   },
-// }

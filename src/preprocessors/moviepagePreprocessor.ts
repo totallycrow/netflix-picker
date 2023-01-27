@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
 import moviesAPI from "../services/tmdb/moviesAPI";
-import { generateErrorMovieObject } from "../services/tmdb/static";
+import { generateErrorMovieObject } from "../services/tmdb/utils";
 import { selectMoviesFromList } from "../services/tmdb/utils";
 
 const moviepagePreprocessor = async (
