@@ -14,3 +14,15 @@ export interface HomePageProps extends IMainProps {
     featuredMovies: IMovie[];
   };
 }
+
+export interface FavouritesPageProps extends IMainProps {
+  sectionBody: {
+    favouriteMovies: IMovie[];
+  };
+}
+
+export interface IMovieProps {
+  isFavourite: boolean;
+  loginData: ILoginData;
+  payload: IMovie;
+}

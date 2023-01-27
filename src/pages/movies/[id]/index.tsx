@@ -1,25 +1,11 @@
 import { GetServerSideProps } from "next";
 import moviesAPI, { IMovie } from "../../../services/tmdb/moviesAPI";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Center,
-} from "@chakra-ui/react";
-import { Header } from "../../../components/header/Header";
-import { MainMenu } from "../../../components/MainMenu";
-import { Image } from "@chakra-ui/react";
-import { useState } from "react";
+import { Center } from "@chakra-ui/react";
 import { CardItem } from "../../../components/movieCard/CardItem";
 import useManageFavourites from "../../../hooks/useManageFavourites";
 import Layout from "../../../components/layout/Layout";
-
-interface IMovieProps {
-  isFavourite: boolean;
-  loginData: ILoginData;
-  payload: IMovie;
-}
+import { erroredMovie } from "../../../services/tmdb/static";
+import { MoviesList } from "../../../components/moviesList/moviesList";
 
 export default function MoviePage(props: IMovieProps) {
   console.log(props);
@@ -49,15 +35,11 @@ export default function MoviePage(props: IMovieProps) {
     <Layout isAuth={props.sharedData.loginData.isAuth}>
       <div>
         <Center>
-          <CardItem
-            imagePath={imagePath}
-            title={title}
+          <MoviesList
+            favList={[props.movieData]}
+            callback={setFavourite}
             buttonText={buttonText}
-            buttonCallback={setFavourite}
-            description={props.movieData.overview}
             favouriteSection={true}
-            w={"2xl"}
-            maxW={"2xl"}
           />
         </Center>
       </div>
@@ -155,34 +137,4 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
       },
     },
   };
-};
-
-type HomePageProps = {
-  loginData: ILoginData;
-};
-
-interface ILoginData {
-  isLoggedIn: boolean;
-  isAuth: boolean;
-  sessionId: string;
-  userId: any;
-  message: string;
-  lastValidated: string;
-}
-
-const erroredMovie = {
-  adult: "",
-  backdrop_path: "",
-  genre_ids: [],
-  id: "ERROR_FETCHING_DATA",
-  original_language: "",
-  original_title: "",
-  overview: "",
-  popularity: "",
-  poster_path: "",
-  release_date: "",
-  title: "",
-  video: false,
-  vote_average: "",
-  vote_count: "",
 };
