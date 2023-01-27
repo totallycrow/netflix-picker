@@ -1,10 +1,6 @@
-import Link from "next/link";
 import React from "react";
 
 export const Header = ({ isAuth }: { isAuth: boolean }) => {
-  console.log("***** HEADER *******");
-  console.log(isAuth);
-
   return (
     // NEXTJS LINK COMPONENT DOESN'T WORK?
     <div className="bg-slate-200 flex justify-end px-8">

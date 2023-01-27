@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import moviesAPI, { IMovie } from "../services/tmdb/moviesAPI";
+import moviesAPI from "../services/tmdb/moviesAPI";
+import { IMovie } from "../types/moviesTypes";
 
 const imgBaseUrl = "https://image.tmdb.org/t/p/w500/";
 

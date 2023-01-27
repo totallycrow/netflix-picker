@@ -1,17 +1,7 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Button,
-  ButtonGroup,
-  Divider,
-  Heading,
-  Stack,
-} from "@chakra-ui/react";
+import { CardFooter, Button, ButtonGroup, Divider } from "@chakra-ui/react";
 
-export const FavouriteBlock = (props: any) => {
+export const FavouriteBlock = (props: IFavBlockProps) => {
   return (
     <div>
       <Divider />
@@ -22,13 +12,15 @@ export const FavouriteBlock = (props: any) => {
             colorScheme="blue"
             onClick={() => props.buttonCallback()}
           >
-            {props.buttonText}
+            {props.buttonText}{" "}
           </Button>
-          {/* <Button variant="ghost" colorScheme="blue">
-              Add to cart
-            </Button> */}
         </ButtonGroup>
       </CardFooter>
     </div>
   );
 };
+
+interface IFavBlockProps {
+  buttonText: string;
+  buttonCallback: () => void;
+}

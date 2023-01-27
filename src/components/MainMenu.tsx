@@ -12,7 +12,6 @@ export const MainMenu = () => {
         <Link href="http://localhost:3000/favourites">Favourites</Link>
       </div>
       <div className="p-2">
-        {/* <Link href="http://localhost:3000/#test">hash test</Link> */}
         <button onClick={(url) => router.replace(router.asPath + "/#test-1")}>
           Hash Test
         </button>

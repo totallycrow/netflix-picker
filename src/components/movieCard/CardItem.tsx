@@ -1,37 +1,11 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Button,
-  ButtonGroup,
-  Divider,
-  Heading,
-  Stack,
-} from "@chakra-ui/react";
-
+import { Card, CardBody, Heading, Stack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
-import { IMovie } from "../../services/tmdb/moviesAPI";
 import { FavouriteBlock } from "./FavouriteBlock";
 import Link from "next/link";
 
-interface IMovieProps {
-  isFavourite: boolean;
-  loginData: ILoginData;
-  payload: IMovie;
-}
-
-interface ICardConfig {
-  imagePath: string;
-  title: string;
-  description: string;
-  buttonCallback: () => void;
-  buttonText: string;
-}
-
-export const CardItem = (props: any) => {
+export const CardItem = (props: ICardConfig) => {
   console.log(props);
   const maxW = props.maxW || "sm";
   return (
@@ -56,9 +30,6 @@ export const CardItem = (props: any) => {
               )}
             </Heading>
             <Text>{props.description}</Text>
-            {/* <Text color="blue.600" fontSize="2xl">
-              $450
-            </Text> */}
           </Stack>
         </CardBody>
         {props.favouriteSection ? (
@@ -74,11 +45,14 @@ export const CardItem = (props: any) => {
   );
 };
 
-interface ILoginData {
-  isLoggedIn: boolean;
-  isAuth: boolean;
-  sessionId: string;
-  userId: any;
-  message: string;
-  lastValidated: string;
+interface ICardConfig {
+  imagePath: string;
+  title: string;
+  description: string;
+  buttonCallback: () => void;
+  buttonText: string;
+  id?: string;
+  maxW?: string;
+  w?: string;
+  favouriteSection: boolean;
 }

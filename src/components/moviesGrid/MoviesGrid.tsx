@@ -1,6 +1,6 @@
 import { Container, Grid } from "@chakra-ui/react";
 import React from "react";
-import { IMovie } from "../../pages";
+import { IMovie } from "../../types/moviesTypes";
 import { CardItem } from "../movieCard/CardItem";
 
 export const MoviesGrid = ({

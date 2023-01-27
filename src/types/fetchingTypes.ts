@@ -1,3 +1,5 @@
+// ************** TYPES & INTERFACES **************
+
 export type RequestError = {
   success: false;
   errorMessage: string;

@@ -1,6 +1,3 @@
-// /api/example.js
-
-import { generateOAuthState } from "../../lib/auth/authUtils";
 import moviesAPI from "../../services/tmdb/moviesAPI";
 import type { NextApiRequest, NextApiResponse } from "next";
 

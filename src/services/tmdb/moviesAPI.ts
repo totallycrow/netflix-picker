@@ -1,5 +1,3 @@
-import axios from "axios";
-import { generateFavouritesQuery } from "./utils";
 import { loginController } from "./login/loginController";
 import * as accountManager from "./account";
 import * as moviesManager from "./movies";
