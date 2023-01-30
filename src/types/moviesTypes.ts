@@ -18,7 +18,7 @@ export interface IMovie {
 }
 
 export interface IFavouriteMoviesList {
-  favouriteMoviesList: Array<any>;
+  favouriteMoviesList: Array<IMovie>;
 }
 
 export interface IMoviesSuccess {
